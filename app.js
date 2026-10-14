@@ -21,13 +21,27 @@ const WA_DISPLAY = '0831-3959-2869';
 // ===== MODE ONLINE (Supabase) — sekali setting via tab ONLINE, tanpa coding =====
 // Kalau cfg kosong -> mode LOKAL (localStorage saja, upload hanya tampil di browser ini).
 // Kalau cfg terisi & valid -> produk + gambar tersimpan online, tampil di semua pengunjung.
-const CLOUD_CFG_KEY = 'epilog_cloud_cfg';
+// ===== MODE ONLINE (Supabase) — CARA PALING SEDERHANA =====
+// Tempel 2 baris ini SEKALI, upload folder ke hosting SEKALI, selesai.
+// Sehari-hari admin tinggal: Choose File → SIMPAN (tanpa coding, tampil semua pengunjung).
+// Kunci anon BOLEH publik (akses dibatasi RLS di SQL). Jangan taruh service_role key di sini!
+const SUPABASE_URL = ''; // contoh: 'https://xxxx.supabase.co'
+const SUPABASE_ANON_KEY = ''; // contoh: 'eyJhbGciOi...'
+const CLOUD_CFG_KEY = 'epilog_cloud_cfg'; // override lokal (untuk tes tanpa edit code)
+// Config efektif = override lokal (tab ONLINE) kalau ada, kalau tidak pakai bawaan code.
+// Ini yang bikin PENGUNJUNG ikut baca data online tanpa perlu setting apa pun.
+function cloudCreds(){
+  const local = load(CLOUD_CFG_KEY, {url:'', key:''});
+  const url = ((local && local.url) || SUPABASE_URL || '').trim().replace(/\/$/,'');
+  const key = ((local && local.key) || SUPABASE_ANON_KEY || '').trim();
+  return {url, key, fromLocal: !!(local && local.url && local.key)};
+}
 let cloudCfg = load(CLOUD_CFG_KEY, {url:'', key:''});
 let sb = null;
 let cloudMode = false; // true = online aktif
 function getSb(){
   if(sb) return sb;
-  const url = (cloudCfg.url||'').trim(), key = (cloudCfg.key||'').trim();
+  const {url, key} = cloudCreds();
   if(!url || !key) return null;
   if(!window.supabase){ toast('Library online belum termuat, cek internet 🙏'); return null; }
   sb = window.supabase.createClient(url, key);
@@ -39,18 +53,24 @@ function setUploadState(msg){
   if(el) el.textContent = msg || '';
 }
 function refreshCloudStatus(){
+  const {url, fromLocal} = cloudCreds();
   const badge = document.getElementById('cloudBadge');
   const st = document.getElementById('cloudStatus');
   const st2 = document.getElementById('cloudStatus2');
   const hint = document.getElementById('uploadModeHint');
-  const label = cloudMode ? '🌐 ONLINE — tampil semua pengunjung' : '📴 LOKAL — hanya browser ini';
-  if(badge) badge.textContent = cloudMode ? '🌐 ONLINE' : '📴 LOKAL';
-  if(badge) badge.style.color = cloudMode ? '#ccff00' : '#888';
-  if(st) st.textContent = cloudMode ? '✅ Online aktif: ' + (cloudCfg.url||'') : '📴 Belum online. Isi URL + Anon Key di atas untuk mengaktifkan.';
-  if(st2) st2.textContent = cloudMode ? '(aktif ✅)' : '(belum aktif — masih lokal)';
-  if(hint) hint.textContent = cloudMode ? 'ONLINE ✅' : 'LOKAL';
-  const u = document.getElementById('cfgUrl'); if(u && !u.value && cloudCfg.url) u.value = cloudCfg.url;
-  const k = document.getElementById('cfgKey'); if(k && !k.value && cloudCfg.key) k.value = cloudCfg.key;
+  const online = serverMode || cloudMode;
+  const label = serverMode ? 'SERVER ONLINE' : (cloudMode ? 'SUPABASE ONLINE' : 'LOKAL');
+  if(badge) badge.textContent = serverMode ? '🌐 SERVER ONLINE' : (cloudMode ? '🌐 ONLINE' : '📴 LOKAL');
+  if(badge) badge.style.color = online ? '#ccff00' : '#888';
+  if(st) st.textContent = serverMode
+    ? '✅ Server aktif — upload via admin.html tampil semua pengunjung otomatis.'
+    : (cloudMode
+      ? '✅ Online aktif (' + (fromLocal ? 'dari setting tab ini' : 'dari code app.js — berlaku semua pengunjung') + ')'
+      : (url ? '⏳ URL terisi tapi belum tersambung. Klik TES KONEKSI.' : '📴 Belum online. Cara termudah: buka admin.html via server (npm start) — tanpa setting API. Alternatif: isi Supabase di bawah.'));
+  if(st2) st2.textContent = serverMode ? '(aktif via server ✅)' : (cloudMode ? '(aktif ✅)' : '(belum aktif — masih lokal)');
+  if(hint) hint.textContent = serverMode ? 'SERVER ONLINE ✅' : (cloudMode ? 'ONLINE ✅' : 'LOKAL');
+  const u = document.getElementById('cfgUrl'); if(u && !u.value) u.value = (load(CLOUD_CFG_KEY,{url:'',key:''}).url||'');
+  const k = document.getElementById('cfgKey'); if(k && !k.value) k.value = (load(CLOUD_CFG_KEY,{url:'',key:''}).key||'');
 }
 async function cloudFetchProducts(){
   const c = getSb(); if(!c) throw new Error('Belum dikonfigurasi');
@@ -79,7 +99,8 @@ async function cloudUploadImage(blob, filename){
 }
 async function initCloud(){
   refreshCloudStatus();
-  if(!(cloudCfg.url && cloudCfg.key)) return; // masih lokal, tidak apa-apa
+  const {url, key} = cloudCreds();
+  if(!(url && key)) return; // masih lokal murni — pengunjung lihat cache/default, tidak error
   try{
     getSb();
     const remote = await cloudFetchProducts();
@@ -89,7 +110,6 @@ async function initCloud(){
       renderProducts(); renderAdmin();
     }
     cloudMode = true;
-    toast('🌐 Mode online aktif!');
   }catch(e){
     console.warn('cloud init gagal:', e);
     cloudMode = false;
@@ -136,6 +156,69 @@ async function pushLocalToCloud(){
 function copyCloudSql(){
   const t = document.getElementById('cloudSql')?.textContent || '';
   navigator.clipboard?.writeText(t).then(()=>toast('SQL tercopy! Paste di Supabase ✅')).catch(()=>toast('Gagal copy, blok manual 🙏'));
+}
+
+// ===== MODE SERVER (backend sendiri — upload online tanpa coding harian) =====
+// Kalau website dijalankan via `npm start` / Render / Railway / VPS,
+// katalog dibaca dari GET /api/products sehingga semua pengunjung
+// otomatis lihat update dari halaman admin.html. Tanpa API key.
+// Kalau dibuka via file:// / hosting statis biasa -> otomatis fallback lokal/Supabase.
+let serverMode = false;
+function adminToken(){ return localStorage.getItem('epilog_admin_token') || ''; }
+async function serverFetchProducts(){
+  for(const u of ['api/products', '/api/products']){
+    try{
+      const r = await fetch(u, {cache:'no-store'});
+      if(r.ok){ const j = await r.json(); if(Array.isArray(j)) return j; }
+    }catch{}
+  }
+  throw new Error('no-server');
+}
+async function serverSaveProduct(p){
+  const t = adminToken();
+  if(!t) return false; // belum login via admin.html -> skip, jangan blokir
+  for(const u of ['api/products', '/api/products']){
+    try{
+      const r = await fetch(u, {method:'POST', headers:{'Content-Type':'application/json','x-admin-token':t}, body: JSON.stringify(p)});
+      if(r.ok) return true;
+    }catch{}
+  }
+  return false;
+}
+async function serverDeleteProduct(id){
+  const t = adminToken();
+  if(!t) return false;
+  for(const u of ['api/products/' + encodeURIComponent(id), '/api/products/' + encodeURIComponent(id)]){
+    try{ const r = await fetch(u, {method:'DELETE', headers:{'x-admin-token':t}}); if(r.ok) return true; }catch{}
+  }
+  return false;
+}
+async function serverUploadImage(blob){
+  const t = adminToken();
+  if(!t) throw new Error('belum-login-server');
+  const fd = new FormData();
+  fd.append('file', blob, 'foto.jpg');
+  for(const u of ['api/upload', '/api/upload']){
+    try{
+      const r = await fetch(u, {method:'POST', headers:{'x-admin-token':t}, body: fd});
+      const j = await r.json();
+      if(r.ok && j.url) return j.url;
+    }catch{}
+  }
+  throw new Error('upload-server-gagal');
+}
+async function initServer(){
+  try{
+    const remote = await serverFetchProducts();
+    if(remote.length){
+      products = remote;
+      try{ localStorage.setItem('epilog_products', JSON.stringify(products)); }catch{}
+      renderProducts(); renderAdmin();
+    }
+    serverMode = true;
+  }catch{ serverMode = false; }
+  refreshCloudStatus();
+  return serverMode;
 }
 
 let products = load('epilog_products', DEFAULT_PRODUCTS);
@@ -399,7 +482,22 @@ function handleImgFile(input){
         document.getElementById('pImg').value = ''; // dikosongkan dulu, diisi URL online / dataURL setelahnya
         const pv = document.getElementById('pPreview');
         if(pv){ pv.src = localUrl; pv.style.display='block'; }
-        if(isCloud()){
+        if(serverMode && adminToken()){
+          try{
+            setUploadState('⏳ Mengupload ke server...');
+            const url = await serverUploadImage(blob);
+            document.getElementById('pImg').value = url;
+            if(pv){ pv.src = url; }
+            setUploadState('✅ Sudah online — tampil semua pengunjung');
+            toast('Gambar online! Klik SIMPAN PRODUK ✅');
+          }catch(err){
+            console.warn('upload server gagal:', err);
+            if((''+err.message).includes('belum-login')){ setUploadState('⚠️ Buka admin.html & login dulu agar online (tersimpan lokal sementara)'); }
+            else setUploadState('⚠️ Upload server gagal, tersimpan lokal dulu');
+            const dataUrl = cv.toDataURL('image/jpeg', 0.72);
+            document.getElementById('pImg').value = dataUrl;
+          }
+        } else if(isCloud()){
           try{
             setUploadState('⏳ Mengupload online...');
             const url = await cloudUploadImage(blob);
@@ -496,6 +594,13 @@ async function saveProduct(e){
   const filePicked = document.getElementById('pFile')?.files?.length > 0;
   let imgVal=(document.getElementById('pImg').value||'').trim();
   // Mode online: kalau user pilih file tapi URL belum jadi (upload gagal di tengah), coba upload ulang saat SIMPAN
+  if(!imgVal && filePicked && serverMode && pendingBlob && adminToken()){
+    try{
+      toast('Mengupload gambar... ⏳');
+      imgVal = await serverUploadImage(pendingBlob);
+      document.getElementById('pImg').value = imgVal;
+    }catch(err){ console.warn(err); return toast('Upload server gagal — login via admin.html dulu 🙏'); }
+  }
   if(!imgVal && filePicked && isCloud() && pendingBlob){
     try{
       toast('Mengupload gambar... ⏳');
@@ -526,7 +631,13 @@ async function saveProduct(e){
   if(ix>=0) products[ix]={...products[ix],...data}; else products.unshift(data);
   if(!save('epilog_products',products)) return; // gagal (quota penuh) -> jangan render/clear
   renderProducts(); renderAdmin(); clearForm();
-  toast(isCloud() ? 'Produk online! Tampil semua pengunjung ✅' : 'Produk tersimpan lokal! ✅ (aktifkan ONLINE agar global)');
+  const onlineNow = serverMode || isCloud();
+  toast(serverMode ? 'Produk online via server! Tampil semua pengunjung ✅' : (isCloud() ? 'Produk online! Tampil semua pengunjung ✅' : 'Produk tersimpan lokal! ✅ (buka admin.html via server agar global)'));
+  // sinkron ke server (kalau login via admin.html)
+  if(serverMode){
+    try{ const ok = await serverSaveProduct(data); if(!ok && adminToken()) toast('Tersimpan lokal, sync server gagal 🙏'); }
+    catch(err){ console.warn(err); }
+  }
   // sinkron ke cloud (non-blocking, tapi laporkan gagal)
   if(isCloud()){
     try{ await cloudUpsertProduct(data); }
@@ -554,6 +665,10 @@ async function delProduct(id){
   if(!confirm('Hapus produk?')) return;
   products=products.filter(p=>p.id!==id);
   save('epilog_products',products);renderProducts();renderAdmin();
+  if(serverMode){
+    try{ const ok = await serverDeleteProduct(id); if(ok) toast('Terhapus dari server juga ✅'); }
+    catch(err){ console.warn(err); }
+  }
   if(isCloud()){
     try{ await cloudDeleteProduct(id); toast('Terhapus online juga ✅'); }
     catch(err){ console.warn(err); toast('Terhapus lokal, sync online gagal 🙏'); }
@@ -582,5 +697,6 @@ function tick(){
 }
 setInterval(tick,1000);
 
-// init
-renderProducts(); renderCart(); tick(); refreshCloudStatus(); initCloud();
+// init (server dulu agar katalog update global, lalu fallback cloud/lokal)
+renderProducts(); renderCart(); tick(); refreshCloudStatus();
+initServer().then(()=>{ renderProducts(); renderAdmin(); initCloud(); });

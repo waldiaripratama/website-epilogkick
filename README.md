@@ -4,13 +4,17 @@ Brand: **EpilogKick**
 Lokasi: `/Users/user/epilog-kick-website/`
 No. WhatsApp pemesanan: **083139592869** → https://wa.me/6283139592869
 
-## Cara Jalankan
-Double-klik `index.html` langsung jalan, atau:
+## Cara Jalankan (Online — bisa upload tanpa coding) ✅
 ```bash
 cd ~/epilog-kick-website
-python3 -m http.server 8000
-# buka http://localhost:8000
+npm install
+npm start
+# buka toko:  http://localhost:3000
+# buka admin: http://localhost:3000/admin.html  (password: admin123)
 ```
+Cara harian (tanpa coding): buka `admin.html` → login → klik kotak foto → pilih gambar dari HP/Laptop → tunggu `✅ Terupload` → isi Nama + Harga → SIMPAN. Katalog di semua pengunjung langsung terupdate.
+
+Cara lama (statis, tanpa server) tetap bisa: double-klik `index.html` atau `python3 -m http.server 8000`. Tapi upload hanya tersimpan di browser itu (badge 📴 LOKAL).
 
 ## Link WhatsApp (sudah terpasang)
 - Tombol mengambang 💬 kanan bawah → chat `6283139592869`
@@ -23,16 +27,20 @@ Ganti nomor WA: edit `WA_ADMIN` di `app.js` (format 62, tanpa +/spasi).
 
 ## Katalog Sepatu — Cara Ubah Gambar / Produk
 
-### Opsi A: Admin Panel — Mode ONLINE (tampil semua pengunjung, tanpa coding) ✅
-1. Klik ⚙️ → `admin123` → buka tab **🌐 ONLINE**.
-2. Setup sekali saja (gratis ±10 menit): buat project di **supabase.com** → SQL Editor → RUN SQL yang ada di tab ONLINE → copy **Project URL + anon key** → paste → **SIMPAN & AKTIFKAN** → **⬆ UPLOAD SEMUA PRODUK LOKAL → ONLINE**.
-3. Sehari-hari: tab PRODUK → `Choose File` → tunggu `✅ Sudah online` → SIMPAN. Langsung tampil di semua HP/pengunjung.
+### Opsi A: Halaman Admin `admin.html` — ONLINE (disarankan, tanpa coding harian) ✅
+1. Jalankan sekali: `npm install && npm start` (di laptop/VPS/Render/Railway). Atau deploy folder ini apa adanya ke Render/Railway/Fly/VPS.
+2. Buka `/admin.html` → login `admin123` → badge `🌐 SERVER ONLINE`.
+3. Klik kotak foto / seret gambar (JPG/PNG/WEBP, maks 5MB) → tunggu `✅ Terupload` → SIMPAN. Foto tersimpan di `assets/uploads/` + data di `products.json`, langsung tampil di semua pengunjung.
+4. Ganti password: set env `ADMIN_PASSWORD` sebelum `npm start`.
 
-### Opsi B: Admin Panel — Mode LOKAL (tanpa setup)
-1. Klik ikon ⚙️ di navbar → password `admin123`
-2. Tab PRODUK → isi Nama, Harga, Kategori, Stok, Deskripsi
-3. Gambar: paste URL ke kolom `URL gambar`, ATAU klik `Choose File` (preview otomatis)
-4. Klik SIMPAN. Catatan: hanya tampil di browser itu (badge 📴 LOKAL).
+### Opsi B: Admin Modal + Supabase — ONLINE via hosting statis
+1. Setup sekali: Supabase gratis → RUN SQL dari tab **🌐 ONLINE** → tempel URL + anon key ke `app.js` (`SUPABASE_URL`, `SUPABASE_ANON_KEY`) → upload folder ke hosting (Netlify/Vercel/dll) → di Admin klik **UPLOAD SEMUA PRODUK → ONLINE** sekali.
+2. Harian: tab PRODUK → `Choose File` → tunggu `✅ Sudah online` → SIMPAN. Badge `🌐 ONLINE` = global.
+
+### Opsi C: Mode LOKAL (tanpa setup)
+1. Buka `admin.html` / ikon ⚙️ → password `admin123`
+2. Isi Nama, Harga, Kategori, Stok, Deskripsi + upload foto
+3. Klik SIMPAN. Catatan: badge 📴 LOKAL = hanya tampil di browser itu.
 
 ### Opsi B: Edit file products.json
 File `products.json` berisi 12 produk contoh. Ubah field `name`, `price`, `img`, `stock`, dll lalu refresh.

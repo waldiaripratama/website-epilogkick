@@ -28,7 +28,7 @@
       <div class="search-wrap">
         <input type="text" id="navSearch" placeholder="Cari sneakers..." oninput="onSearch(this.value)">
       </div>
-      <button class="icon-btn" onclick="toggleAdmin()" title="Admin">⚙️</button>
+      <button class="icon-btn" onclick="location.href='admin.html'" title="Halaman Admin — upload online tanpa coding">⚙️</button>
       <button class="cart-btn" onclick="toggleCart(true)">🛒 KERANJANG <span id="cartCount" class="cart-count">0</span></button>
       <button class="burger" onclick="toggleMobile()">☰</button>
     </div>
@@ -133,7 +133,7 @@
       </ul>
       <div class="about-btns">
         <a class="btn btn-volt" href="https://wa.me/6283139592869?text=Halo%20EpilogKick!%20Mau%20tanya%20stok%20sneakers" target="_blank">CHAT WHATSAPP</a>
-        <button class="btn btn-ghost" onclick="toggleAdmin()">BUKA ADMIN PANEL</button>
+        <a class="btn btn-ghost" href="admin.html">BUKA HALAMAN ADMIN (UPLOAD ONLINE)</a>
       </div>
     </div>
     <div class="about-cards">
@@ -174,7 +174,7 @@
   <div class="container foot-grid">
     <div><a href="#" class="logo">EPILOG<span>KICK.</span></a><p>Toko sneakers original. Pesan mudah via WhatsApp.</p><p>📞 <a href="https://wa.me/6283139592869" target="_blank">0831-3959-2869 (WhatsApp)</a><br>✉️ halo@epilogkick.id</p></div>
     <div><b>SHOP</b><a href="#shop">Semua Sneakers</a><a href="#drop">Drop Terbaru</a><a href="#shop">Under 1 Juta</a><a href="#shop">Limited Edition</a></div>
-    <div><b>BANTUAN</b><a href="#" onclick="openFaq(event)">Cara Tukar Size</a><a href="#" onclick="openFaq(event)">Lacak Pesanan</a><a href="#" onclick="openFaq(event)">Legit Check</a><a href="#" onclick="toggleAdmin()">Admin Panel</a></div>
+    <div><b>BANTUAN</b><a href="#" onclick="openFaq(event)">Cara Tukar Size</a><a href="#" onclick="openFaq(event)">Lacak Pesanan</a><a href="#" onclick="openFaq(event)">Legit Check</a><a href="admin.html">Halaman Admin (Upload Online)</a></div>
     <div><b>PEMBAYARAN</b><div class="pay">BCA • BRI • MANDIRI<br>QRIS • OVO • GOPAY • DANA<br>COD • CICILAN 0%</div></div>
   </div>
   <div class="foot-bottom">© 2026 Epilog Kick. All rights reserved.</div>
@@ -256,7 +256,7 @@
     <form onsubmit="adminLogin(event)" class="co-form"><input type="password" id="adminPass" placeholder="Password admin" required><button class="btn btn-black w-full" type="submit">MASUK</button></form>
   </div>
   <div id="adminPanel" style="display:none">
-    <div class="admin-head"><h2>ADMIN PANEL <span id="cloudBadge" style="font-size:12px;vertical-align:middle"></span></h2><div><button class="btn btn-ghost" onclick="exportData()">⬇ Export</button> <button class="btn btn-ghost" onclick="resetData()">↺ Reset</button> <button class="btn btn-black" onclick="adminLogout()">Logout</button></div></div>
+    <div class="admin-head"><h2>ADMIN PANEL <span id="cloudBadge" style="font-size:12px;vertical-align:middle"></span></h2><div><a class="btn btn-volt" href="admin.html" style="text-decoration:none">🌐 BUKA HALAMAN ADMIN (UPLOAD ONLINE)</a> <button class="btn btn-ghost" onclick="exportData()">⬇ Export</button> <button class="btn btn-ghost" onclick="resetData()">↺ Reset</button> <button class="btn btn-black" onclick="adminLogout()">Logout</button></div></div>
     <div class="admin-tabs"><button class="active" onclick="adminTab('produk',this)">PRODUK</button><button onclick="adminTab('order',this)">PESANAN (<span id="orderCount">0</span>)</button><button onclick="adminTab('online',this)">🌐 ONLINE</button></div>
     <div id="tabProduk">
       <form onsubmit="saveProduct(event)" class="admin-form">
@@ -282,8 +282,8 @@
     <div id="tabOrder" style="display:none"><div id="orderList" class="admin-list"></div></div>
     <div id="tabOnline" style="display:none">
       <div style="background:#1a1a1a;border:1px solid #333;border-radius:14px;padding:16px;display:grid;gap:10px">
-        <div style="font-weight:800">🌐 MODE ONLINE — upload terlihat semua pengunjung <span id="cloudStatus2" style="font-weight:400;color:#888"></span></div>
-        <small style="color:#aaa;line-height:1.6">Sekali setting (gratis, ±10 menit, tanpa coding). Setelah itu tiap upload via <b>Choose File → SIMPAN</b> otomatis tersimpan online &amp; tampil di semua HP/pengunjung.<br>Mode lokal (belum setting) = upload hanya tampil di browser ini.</small>
+        <div style="font-weight:800">🌐 MODE ONLINE — upload tampil semua pengunjung <span id="cloudStatus2" style="font-weight:400;color:#888"></span></div>
+        <small style="color:#aaa;line-height:1.7"><b>Cara permanen (sekali saja):</b> 1) buat project gratis di <b>supabase.com</b> → 2) SQL Editor → RUN SQL di bawah → 3) tempel <b>URL + anon key</b> ke 2 baris paling atas <code>app.js</code> (<code>SUPABASE_URL</code> / <code>SUPABASE_ANON_KEY</code>) → upload folder ke hosting (Netlify/Vercel) sekali. Setelah itu tiap <b>Choose File → SIMPAN</b> otomatis online.<br><b>Coba-coba:</b> isi 2 kolom di bawah → SIMPAN &amp; AKTIFKAN (hanya berlaku di browser ini, pengunjung lain belum ikut sampai ditempel di code + deploy).</small>
         <label style="font-size:13px;font-weight:700;display:grid;gap:6px">Supabase URL<input id="cfgUrl" placeholder="https://xxxx.supabase.co" style="background:#1f1f1f;border:1px solid #333;color:#fff;padding:12px 14px;border-radius:12px;width:100%"></label>
         <label style="font-size:13px;font-weight:700;display:grid;gap:6px">Supabase Anon Key<input id="cfgKey" placeholder="eyJhbGciOi..." style="background:#1f1f1f;border:1px solid #333;color:#fff;padding:12px 14px;border-radius:12px;width:100%"></label>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -296,10 +296,9 @@
         <details style="font-size:13px;color:#aaa">
           <summary style="cursor:pointer;font-weight:800;color:#ccff00">📋 Cara setup sekali saja (klik untuk buka)</summary>
           <ol style="margin:10px 0 0 18px;line-height:1.8">
-            <li>Buka <b>supabase.com</b> → daftar gratis → <b>New project</b> (nama: epilogkick, password bebas, region Singapore).</li>
-            <li>Tunggu ±2 menit → masuk menu <b>SQL Editor → New query</b> → copy-paste SQL di bawah → <b>RUN</b>.</li>
-            <li>Masuk menu <b>Project Settings → API</b> → copy <b>Project URL</b> + <b>anon public key</b> → paste ke kolom di atas → <b>SIMPAN &amp; AKTIFKAN</b>.</li>
-            <li>Klik <b>⬆ UPLOAD SEMUA PRODUK LOKAL → ONLINE</b> sekali. Selesai — upload berikutnya otomatis online.</li>
+            <li>Buka <b>supabase.com</b> → daftar gratis → <b>New project</b> (nama: epilogkick, region Singapore).</li>
+            <li><b>SQL Editor → New query</b> → copy SQL di bawah → <b>RUN</b> (bikin tabel + bucket foto + izin baca publik).</li>
+            <li><b>Project Settings → API</b> → copy <b>Project URL</b> + <b>anon public key</b> → tempel ke <code>app.js</code> baris <code>SUPABASE_URL</code>/<code>SUPABASE_ANON_KEY</code> → upload folder ke hosting → di Admin klik <b>⬆ UPLOAD SEMUA PRODUK LOKAL → ONLINE</b> sekali.</li>
           </ol>
           <pre id="cloudSql" style="white-space:pre-wrap;background:#0a0a0a;border:1px solid #333;border-radius:10px;padding:12px;margin-top:10px;font-size:11px;color:#ddd">create table if not exists products (
   id text primary key,
