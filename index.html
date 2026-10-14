@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>EPILOG KICK — Sneakers Original, Gaya Tanpa Kompromi</title>
+<meta name="description" content="Epilog Kick — Toko sneakers original. Nike, Jordan, Adidas, New Balance, Vans. Free ongkir, 100% original, garansi tukar size." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23000'/><text x='50' y='68' font-size='55' text-anchor='middle' fill='%23ccff00' font-family='Arial Black'>E</text></svg>">
+</head>
+<body>
+
+<div class="topbar">🔥 DROP 004 — “CONCRETE JUNGLE” SUDAH RILIS • FREE ONGKIR SE-INDONESIA MIN. BELANJA 500RB • <a href="#shop">SERBU SEKARANG →</a></div>
+
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo">EPILOG<span>KICK.</span></a>
+    <nav class="nav-links">
+      <a href="#shop">SHOP</a>
+      <a href="#drop">DROP TERBARU</a>
+      <a href="#about">TENTANG</a>
+      <a href="#testi">REVIEW</a>
+    </nav>
+    <div class="nav-actions">
+      <div class="search-wrap">
+        <input type="text" id="navSearch" placeholder="Cari sneakers..." oninput="onSearch(this.value)">
+      </div>
+      <button class="icon-btn" onclick="toggleAdmin()" title="Admin">⚙️</button>
+      <button class="cart-btn" onclick="toggleCart(true)">🛒 KERANJANG <span id="cartCount" class="cart-count">0</span></button>
+      <button class="burger" onclick="toggleMobile()">☰</button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#shop">SHOP</a><a href="#drop">DROP TERBARU</a><a href="#about">TENTANG</a><a href="#testi">REVIEW</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-text">EPILOG</div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="badge"><span class="dot"></span> 100% ORIGINAL • BNIB • GARANSI 30 HARI</div>
+      <h1>LANGKAH<br>LO, <span class="outline">CERITA</span><br><span class="volt">LO.</span></h1>
+      <p class="hero-desc">Epilog Kick bukan sekadar toko sneakers. Kami kurasi siluet paling panas — dari Jordan retro sampai runner modern — langsung dari distributor resmi.</p>
+      <div class="hero-cta">
+        <a href="#shop" class="btn btn-volt">BELANJA SEKARANG →</a>
+        <a href="#drop" class="btn btn-ghost">LIHAT DROP 004</a>
+      </div>
+      <div class="hero-stats">
+        <div><b id="statProduct">12+</b><span>Siluet Kurasi</span></div>
+        <div><b>15K+</b><span>Sneakerhead Puas</span></div>
+        <div><b>4.9★</b><span>Rating Toko</span></div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-card">
+        <div class="hero-tag">MOST WANTED 🔥</div>
+        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80&auto=format&fit=crop" alt="Nike Red">
+        <div class="hero-card-info">
+          <div><b>Epilog Velocity “Infrared”</b><span>Nike Air Style • Limited</span></div>
+          <div class="price">Rp 1.899.000</div>
+        </div>
+        <button class="btn btn-black" onclick="quickAdd('p1')">+ KERANJANG</button>
+      </div>
+      <div class="hero-sticker">FREE<br>ONGKIR</div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee"><div class="marquee-track" id="marqueeTrack">
+  <span>EPILOG KICK ✦ 100% ORIGINAL ✦ FREE ONGKIR ✦ BISA TUKAR SIZE ✦ COD & QRIS ✦ DROP SETIAP BULAN ✦&nbsp;</span>
+  <span>EPILOG KICK ✦ 100% ORIGINAL ✦ FREE ONGKIR ✦ BISA TUKAR SIZE ✦ COD & QRIS ✦ DROP SETIAP BULAN ✦&nbsp;</span>
+</div></div>
+
+<!-- DROP -->
+<section class="drop" id="drop">
+  <div class="container">
+    <div class="sec-head">
+      <h2>DROP 004: <span class="volt-text">CONCRETE JUNGLE</span></h2>
+      <p>Koleksi terbatas. Sekali habis, tidak restock.</p>
+    </div>
+    <div class="drop-grid">
+      <div class="drop-main">
+        <img src="https://images.unsplash.com/photo-1552346154-21d32810aba3?w=1000&q=80&auto=format&fit=crop" alt="Drop">
+        <div class="drop-overlay">
+          <div class="countdown"><span>BERAKHIR DALAM:</span><b id="countdown">02 : 14 : 33 : 10</b></div>
+          <a href="#shop" class="btn btn-volt">GAS BELANJA</a>
+        </div>
+      </div>
+      <div class="drop-side">
+        <div class="perk">✅<div><b>Legit Check 3x</b><span>Setiap pasang dicek manual + UV + barcode.</span></div></div>
+        <div class="perk">✅<div><b>Tukar Size 30 Hari</b><span>Kegedean / kekecilan? Tuker gratis.</span></div></div>
+        <div class="perk">✅<div><b>Cicilan 0% 12x</b><span>Support semua e-wallet & kartu kredit.</span></div></div>
+        <div class="drop-quote">“Epilog Kick jadi tempat pertama gue cek tiap ada rilis Jordan. Fast, trusted, packaging niat.”<b>— @sneakerhead_jkt</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SHOP -->
+<section class="shop" id="shop">
+  <div class="container">
+    <div class="sec-head row">
+      <div><h2>KATALOG<span class="volt-text">.</span></h2><p id="resultInfo">Menampilkan semua produk</p></div>
+      <div class="filters">
+        <div class="cat-pills" id="catPills"></div>
+        <select id="sortSel" onchange="onSort(this.value)">
+          <option value="featured">URUT: PILIHAN</option>
+          <option value="low">HARGA TERENDAH</option>
+          <option value="high">HARGA TERTINGGI</option>
+          <option value="name">NAMA A-Z</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid" id="productGrid"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="container about-grid">
+    <div>
+      <h2>KENAPA<br>EPILOG KICK?</h2>
+      <p>Kami mulai 2019 dari satu kamar kos di Bandung. Sekarang melayani 15.000+ sneakerhead di seluruh Indonesia dengan satu prinsip: <b>no fake, no drama.</b></p>
+      <ul class="checklist">
+        <li>✔ Distributor resmi & invoice transparan</li>
+        <li>✔ Foto produk real, bukan comot Google</li>
+        <li>✔ Live legit-check via WhatsApp / Video call</li>
+      </ul>
+      <div class="about-btns">
+        <a class="btn btn-volt" href="https://wa.me/6283139592869?text=Halo%20EpilogKick!%20Mau%20tanya%20stok%20sneakers" target="_blank">CHAT WHATSAPP</a>
+        <button class="btn btn-ghost" onclick="toggleAdmin()">BUKA ADMIN PANEL</button>
+      </div>
+    </div>
+    <div class="about-cards">
+      <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&q=80&auto=format&fit=crop" alt="Store">
+      <div class="mini-grid">
+        <div class="mini"><b>48 JAM</b><span>Pengiriman avg. Jawa</span></div>
+        <div class="mini"><b>0</b><span>Kasus barang KW</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTI -->
+<section class="testi" id="testi">
+  <div class="container">
+    <h2>KATA MEREKA<span class="volt-text">.</span></h2>
+    <div class="testi-grid">
+      <div class="t-card"><div class="stars">★★★★★</div><p>“Jordan 1 gue dateng double box + paper wrap rapi. Size pas, legit 100%. Langganan sih ini.”</p><b>Rizky — Jakarta</b><span>Verified Buyer • Jordan 1 Mid</span></div>
+      <div class="t-card"><div class="stars">★★★★★</div><p>“Sempat salah size, dituker tanpa ribet 3 hari sampai. CS fast respon jam 11 malem. Gila.”</p><b>Nadia — Surabaya</b><span>Verified Buyer • New Balance 530</span></div>
+      <div class="t-card"><div class="stars">★★★★★</div><p>“Harga paling masuk akal untuk barang BNIB. Pernah bandingin 4 toko, Epilog paling murah + gratis kaos kaki.”</p><b>Bagas — Medan</b><span>Verified Buyer • Dunk Low Panda</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter">
+  <div class="container news-box">
+    <h2>DAPATKAN AKSES EARLY DROP 📦</h2>
+    <p>Daftar biar kebagian size sebelum kehabisan. No spam, cuma info rilis.</p>
+    <form onsubmit="subscribe(event)" class="news-form">
+      <input type="email" id="newsEmail" placeholder="email@kamu.com" required>
+      <button class="btn btn-black" type="submit">GAS DAFTAR</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="container foot-grid">
+    <div><a href="#" class="logo">EPILOG<span>KICK.</span></a><p>Toko sneakers original. Pesan mudah via WhatsApp.</p><p>📞 <a href="https://wa.me/6283139592869" target="_blank">0831-3959-2869 (WhatsApp)</a><br>✉️ halo@epilogkick.id</p></div>
+    <div><b>SHOP</b><a href="#shop">Semua Sneakers</a><a href="#drop">Drop Terbaru</a><a href="#shop">Under 1 Juta</a><a href="#shop">Limited Edition</a></div>
+    <div><b>BANTUAN</b><a href="#" onclick="openFaq(event)">Cara Tukar Size</a><a href="#" onclick="openFaq(event)">Lacak Pesanan</a><a href="#" onclick="openFaq(event)">Legit Check</a><a href="#" onclick="toggleAdmin()">Admin Panel</a></div>
+    <div><b>PEMBAYARAN</b><div class="pay">BCA • BRI • MANDIRI<br>QRIS • OVO • GOPAY • DANA<br>COD • CICILAN 0%</div></div>
+  </div>
+  <div class="foot-bottom">© 2026 Epilog Kick. All rights reserved.</div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/6283139592869?text=Halo%20EpilogKick!%20Mau%20tanya%20sneakers" target="_blank" title="Chat WhatsApp 0831-3959-2869">💬</a>
+
+<!-- CART DRAWER -->
+<div class="overlay" id="cartOverlay" onclick="toggleCart(false)"></div>
+<aside class="cart" id="cartDrawer">
+  <div class="cart-head"><h3>KERANJANG (<span id="cartCount2">0</span>)</h3><button onclick="toggleCart(false)">✕</button></div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot">
+    <div class="voucher-row"><input id="voucher" placeholder="Kode voucher (cth: EPILOG10)"><button onclick="applyVoucher()">PAKAI</button></div>
+    <div class="row"><span>Subtotal</span><b id="cartSubtotal">Rp 0</b></div>
+    <div class="row"><span>Ongkir</span><b id="cartOngkir">Rp 0</b></div>
+    <div class="row"><span>Diskon</span><b id="cartDiskon">- Rp 0</b></div>
+    <div class="row total"><span>Total</span><b id="cartTotal">Rp 0</b></div>
+    <button class="btn btn-volt w-full" onclick="openCheckout()">CHECKOUT →</button>
+    <button class="btn btn-ghost w-full" onclick="toggleCart(false)">LANJUT BELANJA</button>
+  </div>
+</aside>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-bg" id="productModalBg" onclick="closeProduct()"></div>
+<div class="modal" id="productModal">
+  <button class="modal-x" onclick="closeProduct()">✕</button>
+  <div class="modal-grid">
+    <img id="mImg" src="" alt="">
+    <div>
+      <div class="m-cat" id="mCat"></div>
+      <h2 id="mName"></h2>
+      <div class="m-rating" id="mRating"></div>
+      <div class="m-price"><b id="mPrice"></b><s id="mOld"></s><span class="disc" id="mDisc"></span></div>
+      <p id="mDesc"></p>
+      <b>PILIH SIZE (EU):</b>
+      <div class="sizes" id="mSizes"></div>
+      <div class="qty-row">
+        <div class="qty"><button onclick="chQty(-1)">−</button><span id="mQty">1</span><button onclick="chQty(1)">+</button></div>
+        <span id="mStock"></span>
+      </div>
+      <div class="modal-cta">
+        <button class="btn btn-volt" onclick="addFromModal()">+ KERANJANG</button>
+        <button class="btn btn-black" onclick="buyNow()">BELI SEKARANG</button>
+      </div>
+      <button class="btn btn-wa w-full" onclick="orderWa(modalId)">💬 PESAN VIA WHATSAPP — 0831-3959-2869</button>
+      <div class="trust">🔒 100% Original • 🔄 Tukar 30 hari • 🚚 Kirim H+1</div>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-bg" id="checkoutBg" onclick="closeCheckout()"></div>
+<div class="modal" id="checkoutModal">
+  <button class="modal-x" onclick="closeCheckout()">✕</button>
+  <h2>CHECKOUT<span class="volt-text">.</span></h2>
+  <div class="co-grid">
+    <form onsubmit="submitOrder(event)" class="co-form">
+      <label>Nama Lengkap<input id="fNama" required placeholder="Nama kamu"></label>
+      <label>No. WhatsApp<input id="fWa" required placeholder="08xx..." pattern="[0-9+ ]{9,16}"></label>
+      <label>Alamat Lengkap<textarea id="fAlamat" required placeholder="Jalan, No, Kecamatan, Kota, Kode Pos"></textarea></label>
+      <div class="two">
+        <label>Kota<select id="fKota" onchange="calcOngkir()"><option value="bandung">Bandung (Rp 15rb)</option><option value="jabodetabek">Jabodetabek (Rp 25rb)</option><option value="jawa">Luar Bandung / Jawa (Rp 35rb)</option><option value="luar">Luar Jawa (Rp 60rb)</option></select></label>
+        <label>Pembayaran<select id="fBayar"><option>Transfer Bank</option><option>QRIS</option><option>E-Wallet (OVO/Gopay/Dana)</option><option>COD</option><option>Cicilan 0% 12x</option></select></label>
+      </div>
+      <button class="btn btn-volt w-full" type="submit">BUAT PESANAN →</button>
+    </form>
+    <div class="co-sum"><h4>RINGKASAN</h4><div id="coItems"></div><div class="row total"><span>Total Bayar</span><b id="coTotal"></b></div></div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="modal-bg" id="adminBg" onclick="toggleAdmin(false)"></div>
+<div class="modal admin-modal" id="adminModal">
+  <button class="modal-x" onclick="toggleAdmin(false)">✕</button>
+  <div id="adminLogin">
+    <h2>ADMIN LOGIN</h2>
+    <p>Password default: <code>admin123</code></p>
+    <form onsubmit="adminLogin(event)" class="co-form"><input type="password" id="adminPass" placeholder="Password admin" required><button class="btn btn-black w-full" type="submit">MASUK</button></form>
+  </div>
+  <div id="adminPanel" style="display:none">
+    <div class="admin-head"><h2>ADMIN PANEL</h2><div><button class="btn btn-ghost" onclick="exportData()">⬇ Export</button> <button class="btn btn-ghost" onclick="resetData()">↺ Reset</button> <button class="btn btn-black" onclick="adminLogout()">Logout</button></div></div>
+    <div class="admin-tabs"><button class="active" onclick="adminTab('produk',this)">PRODUK</button><button onclick="adminTab('order',this)">PESANAN (<span id="orderCount">0</span>)</button></div>
+    <div id="tabProduk">
+      <form onsubmit="saveProduct(event)" class="admin-form">
+        <input type="hidden" id="pId">
+        <input id="pName" required placeholder="Nama produk">
+        <input id="pPrice" required type="number" min="1000" placeholder="Harga (cth 1299000)">
+        <input id="pOld" type="number" placeholder="Harga coret (opsional)">
+        <select id="pCat"><option>Nike</option><option>Jordan</option><option>Adidas</option><option>New Balance</option><option>Vans</option><option>Puma</option><option>Limited</option></select>
+        <input id="pImg" placeholder="URL gambar ATAU upload file di bawah (otomatis terisi)">
+        <div style="grid-column:1/-1;background:#1a1a1a;border:1px dashed #444;border-radius:12px;padding:12px">
+          <label style="font-size:13px">📷 GANTI GAMBAR KATALOG (upload dari HP/Laptop, maks 1.5MB):<br><input type="file" id="pFile" accept="image/*" onchange="handleImgFile(this)" style="margin-top:8px"></label><br>
+          <img id="pPreview" style="display:none;max-width:160px;border-radius:10px;margin-top:10px" alt="preview">
+          <small style="color:#888">Cara lain: taruh file di folder <code>assets/</code> lalu isi kolom URL dengan <code>assets/nama-file.jpg</code></small>
+        </div>
+        <input id="pStock" type="number" min="0" value="10" placeholder="Stok">
+        <textarea id="pDesc" placeholder="Deskripsi"></textarea>
+        <button class="btn btn-volt" type="submit">SIMPAN PRODUK</button>
+        <button type="button" class="btn btn-ghost" onclick="clearForm()">BATAL</button>
+      </form>
+      <div id="adminList" class="admin-list"></div>
+    </div>
+    <div id="tabOrder" style="display:none"><div id="orderList" class="admin-list"></div></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
