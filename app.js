@@ -18,6 +18,126 @@ const ONGKIR = {bandung:15000, jabodetabek:25000, jawa:35000, luar:60000};
 const WA_ADMIN = '6283139592869'; // 083139592869
 const WA_DISPLAY = '0831-3959-2869';
 
+// ===== MODE ONLINE (Supabase) — sekali setting via tab ONLINE, tanpa coding =====
+// Kalau cfg kosong -> mode LOKAL (localStorage saja, upload hanya tampil di browser ini).
+// Kalau cfg terisi & valid -> produk + gambar tersimpan online, tampil di semua pengunjung.
+const CLOUD_CFG_KEY = 'epilog_cloud_cfg';
+let cloudCfg = load(CLOUD_CFG_KEY, {url:'', key:''});
+let sb = null;
+let cloudMode = false; // true = online aktif
+function getSb(){
+  if(sb) return sb;
+  const url = (cloudCfg.url||'').trim(), key = (cloudCfg.key||'').trim();
+  if(!url || !key) return null;
+  if(!window.supabase){ toast('Library online belum termuat, cek internet 🙏'); return null; }
+  sb = window.supabase.createClient(url, key);
+  return sb;
+}
+function isCloud(){ return cloudMode && !!getSb(); }
+function setUploadState(msg){
+  const el = document.getElementById('uploadState');
+  if(el) el.textContent = msg || '';
+}
+function refreshCloudStatus(){
+  const badge = document.getElementById('cloudBadge');
+  const st = document.getElementById('cloudStatus');
+  const st2 = document.getElementById('cloudStatus2');
+  const hint = document.getElementById('uploadModeHint');
+  const label = cloudMode ? '🌐 ONLINE — tampil semua pengunjung' : '📴 LOKAL — hanya browser ini';
+  if(badge) badge.textContent = cloudMode ? '🌐 ONLINE' : '📴 LOKAL';
+  if(badge) badge.style.color = cloudMode ? '#ccff00' : '#888';
+  if(st) st.textContent = cloudMode ? '✅ Online aktif: ' + (cloudCfg.url||'') : '📴 Belum online. Isi URL + Anon Key di atas untuk mengaktifkan.';
+  if(st2) st2.textContent = cloudMode ? '(aktif ✅)' : '(belum aktif — masih lokal)';
+  if(hint) hint.textContent = cloudMode ? 'ONLINE ✅' : 'LOKAL';
+  const u = document.getElementById('cfgUrl'); if(u && !u.value && cloudCfg.url) u.value = cloudCfg.url;
+  const k = document.getElementById('cfgKey'); if(k && !k.value && cloudCfg.key) k.value = cloudCfg.key;
+}
+async function cloudFetchProducts(){
+  const c = getSb(); if(!c) throw new Error('Belum dikonfigurasi');
+  const {data, error} = await c.from('products').select('*');
+  if(error) throw error;
+  return data || [];
+}
+async function cloudUpsertProduct(p){
+  const c = getSb(); if(!c) return;
+  const {error} = await c.from('products').upsert(p);
+  if(error) throw error;
+}
+async function cloudDeleteProduct(id){
+  const c = getSb(); if(!c) return;
+  const {error} = await c.from('products').delete().eq('id', id);
+  if(error) throw error;
+}
+// Upload blob gambar -> Storage public -> kembalikan URL publik
+async function cloudUploadImage(blob, filename){
+  const c = getSb(); if(!c) throw new Error('Belum dikonfigurasi');
+  const path = filename || ('p-' + Date.now() + '.jpg');
+  const {error} = await c.storage.from('product-images').upload(path, blob, {contentType:'image/jpeg', upsert:true});
+  if(error) throw error;
+  const {data} = c.storage.from('product-images').getPublicUrl(path);
+  return data.publicUrl;
+}
+async function initCloud(){
+  refreshCloudStatus();
+  if(!(cloudCfg.url && cloudCfg.key)) return; // masih lokal, tidak apa-apa
+  try{
+    getSb();
+    const remote = await cloudFetchProducts();
+    if(remote.length){
+      products = remote;
+      save('epilog_products', products);
+      renderProducts(); renderAdmin();
+    }
+    cloudMode = true;
+    toast('🌐 Mode online aktif!');
+  }catch(e){
+    console.warn('cloud init gagal:', e);
+    cloudMode = false;
+  }
+  refreshCloudStatus();
+}
+function saveCloudCfg(){
+  const url = (document.getElementById('cfgUrl').value||'').trim().replace(/\/$/,'');
+  const key = (document.getElementById('cfgKey').value||'').trim();
+  if(!url || !key) return toast('Isi URL + Anon Key dulu 🙏');
+  cloudCfg = {url, key};
+  save(CLOUD_CFG_KEY, cloudCfg);
+  sb = null; cloudMode = false;
+  refreshCloudStatus();
+  toast('Menyambungkan... ⏳');
+  initCloud().then(()=>{ if(cloudMode) toast('Online aktif! ✅'); else toast('Gagal konek, cek URL/Key + SQL 🙏'); });
+}
+async function testCloud(){
+  try{
+    const c = getSb(); if(!c) return toast('Isi URL + Key dulu 🙏');
+    const n = (await cloudFetchProducts()).length;
+    cloudMode = true; refreshCloudStatus();
+    toast(`Tersambung! ${n} produk online ✅`);
+  }catch(e){ console.warn(e); toast('Gagal: ' + (e.message||e) + ' 🙏'); }
+}
+function disconnectCloud(){
+  if(!confirm('Putuskan mode online? Katalog kembali lokal.')) return;
+  cloudCfg = {url:'', key:''};
+  save(CLOUD_CFG_KEY, cloudCfg);
+  sb = null; cloudMode = false;
+  refreshCloudStatus();
+  toast('Kembali ke mode lokal 📴');
+}
+async function pushLocalToCloud(){
+  try{
+    if(!getSb()) return toast('Isi URL + Key dulu 🙏');
+    if(!products.length) return toast('Tidak ada produk lokal!');
+    toast('Mengupload ' + products.length + ' produk... ⏳');
+    for(const p of products) await cloudUpsertProduct(p);
+    cloudMode = true; refreshCloudStatus();
+    toast('Semua produk sudah online! ✅');
+  }catch(e){ console.warn(e); toast('Gagal upload: ' + (e.message||e) + ' 🙏'); }
+}
+function copyCloudSql(){
+  const t = document.getElementById('cloudSql')?.textContent || '';
+  navigator.clipboard?.writeText(t).then(()=>toast('SQL tercopy! Paste di Supabase ✅')).catch(()=>toast('Gagal copy, blok manual 🙏'));
+}
+
 let products = load('epilog_products', DEFAULT_PRODUCTS);
 let cart = load('epilog_cart', []); // {id,size,qty}
 let orders = load('epilog_orders', []);
@@ -26,7 +146,16 @@ let curFilter = 'Semua', curSearch='', curSort='featured';
 let modalId=null, modalSize=null, modalQty=1;
 
 function load(k, fb){ try{const v=JSON.parse(localStorage.getItem(k)); return v??fb}catch{return fb} }
-function save(k,v){ localStorage.setItem(k, JSON.stringify(v)) }
+function save(k,v){
+  try{ localStorage.setItem(k, JSON.stringify(v)); return true }
+  catch(e){
+    console.warn('save gagal:', k, e);
+    const quota = e && (e.name==='QuotaExceededError'||e.name==='NS_ERROR_DOM_QUOTA_REACHED' || (''+e).includes('Quota'));
+    if(quota) toast('Penyimpanan penuh! Gambar terlalu besar. Kompres <500KB atau pakai URL / assets/ 🙏');
+    else toast('Gagal menyimpan! 🙏');
+    return false;
+  }
+}
 function rp(n){ return 'Rp ' + n.toLocaleString('id-ID') }
 
 function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._x); t._x=setTimeout(()=>t.classList.remove('show'),2200) }
@@ -197,6 +326,13 @@ function submitOrder(e){
   // kurangi stok
   order.items.forEach(it=>{const p=products.find(x=>x.id===it.id); if(p){p.stock=Math.max(0,p.stock-it.qty); p.sold+=it.qty}});
   save('epilog_products',products);
+  // sync stok ke online (best-effort)
+  if(isCloud()){
+    order.items.forEach(it=>{
+      const p = products.find(x=>x.id===it.id);
+      if(p) cloudUpsertProduct(p).catch(e=>console.warn('sync stok gagal:', e));
+    });
+  }
   orders.unshift(order); save('epilog_orders',orders);
   cart=[]; save('epilog_cart',cart); renderCart(); renderProducts(); renderAdmin();
   closeCheckout();
@@ -222,18 +358,103 @@ function waCheckoutLink(order){
   const raw = `Halo EpilogKick! Saya ${order.nama} mau order ${order.id} total ${rp(order.total)} (${order.bayar}). Alamat: ${order.alamat}`;
   return `https://wa.me/${WA_ADMIN}?text=${encodeURIComponent(raw)}`;
 }
-// Upload gambar lokal -> base64 (biar katalog bisa diganti tanpa URL)
+// Upload gambar: dikompres dulu (max 800px), lalu:
+// - Mode ONLINE: diupload ke Supabase Storage -> dapat URL publik (tampil semua pengunjung)
+// - Mode LOKAL: disimpan sebagai dataURL di localStorage (hanya browser ini)
+let imgReady = true;
+let pendingBlob = null; // blob terkompres siap upload (dipakai mode online saat SIMPAN)
+function compressImage(img){
+  const MAX = 800;
+  let w = img.width, h = img.height;
+  const scale = Math.min(1, MAX / Math.max(w, h));
+  w = Math.max(1, Math.round(w * scale)); h = Math.max(1, Math.round(h * scale));
+  const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+  cv.getContext('2d').drawImage(img, 0, 0, w, h);
+  return cv;
+}
+function canvasToBlob(cv, q){
+  return new Promise(res => cv.toBlob(b => res(b), 'image/jpeg', q));
+}
 function handleImgFile(input){
   const f = input.files && input.files[0]; if(!f) return;
-  if(f.size > 1.5*1024*1024) { toast('Maks 1.5MB ya, kompres dulu 🙏'); input.value=''; return; }
+  if(!f.type.startsWith('image/')){ toast('File harus gambar 🙏'); input.value=''; return; }
+  if(f.size > 2.5*1024*1024) { toast('Maks 2.5MB ya, kompres dulu 🙏'); input.value=''; return; }
+  imgReady = false; pendingBlob = null;
+  setUploadState('⏳ Memproses gambar...');
   const r = new FileReader();
   r.onload = e => {
-    document.getElementById('pImg').value = e.target.result;
-    const pv = document.getElementById('pPreview');
-    if(pv){ pv.src = e.target.result; pv.style.display='block'; }
-    toast('Gambar siap! Klik SIMPAN PRODUK ✅');
+    const img = new Image();
+    img.onload = async () => {
+      try{
+        const cv = compressImage(img);
+        let q = 0.82;
+        let blob = await canvasToBlob(cv, q);
+        // Kalau masih > ~700KB, kompres ulang lebih agresif
+        if(blob && blob.size > 700000){
+          blob = await canvasToBlob(cv, 0.65);
+        }
+        if(!blob) throw new Error('kompres gagal');
+        pendingBlob = blob;
+        const localUrl = URL.createObjectURL(blob);
+        document.getElementById('pImg').value = ''; // dikosongkan dulu, diisi URL online / dataURL setelahnya
+        const pv = document.getElementById('pPreview');
+        if(pv){ pv.src = localUrl; pv.style.display='block'; }
+        if(isCloud()){
+          try{
+            setUploadState('⏳ Mengupload online...');
+            const url = await cloudUploadImage(blob);
+            document.getElementById('pImg').value = url;
+            if(pv){ pv.src = url; }
+            setUploadState('✅ Sudah online — tampil semua pengunjung');
+            toast('Gambar online! Klik SIMPAN PRODUK ✅');
+          }catch(err){
+            console.warn('upload online gagal, fallback lokal:', err);
+            // fallback: pakai dataURL lokal agar tidak blocking
+            const dataUrl = cv.toDataURL('image/jpeg', 0.72);
+            document.getElementById('pImg').value = dataUrl;
+            setUploadState('⚠️ Upload online gagal, tersimpan lokal dulu');
+            toast('Net gangguan — tersimpan lokal dulu ⚠️');
+          }
+        } else {
+          // mode lokal: simpan dataURL terkompres
+          const dataUrl = cv.toDataURL('image/jpeg', blob.size > 700000 ? 0.65 : 0.82);
+          document.getElementById('pImg').value = dataUrl;
+          setUploadState('📴 Mode lokal — hanya tampil di browser ini (aktifkan tab ONLINE)');
+          toast('Gambar siap! Klik SIMPAN PRODUK ✅');
+        }
+      }catch(err){
+        console.warn('kompres gagal, pakai file asli:', err);
+        document.getElementById('pImg').value = e.target.result;
+        const pv = document.getElementById('pPreview');
+        if(pv){ pv.src = e.target.result; pv.style.display='block'; }
+        setUploadState('');
+        toast('Gambar siap! Klik SIMPAN PRODUK ✅');
+      }
+      imgReady = true;
+    };
+    img.onerror = () => {
+      document.getElementById('pImg').value = e.target.result;
+      const pv = document.getElementById('pPreview');
+      if(pv){ pv.src = e.target.result; pv.style.display='block'; }
+      imgReady = true; setUploadState('');
+      toast('Gambar siap! Klik SIMPAN PRODUK ✅');
+    };
+    img.src = e.target.result;
   };
+  r.onerror = () => { imgReady = true; setUploadState(''); toast('Gagal baca file 🙏'); };
   r.readAsDataURL(f);
+}
+// Preview live saat user paste URL / path assets/ manual
+function syncPreviewFromUrl(){
+  const v = (document.getElementById('pImg').value||'').trim();
+  const pv = document.getElementById('pPreview');
+  if(!pv) return;
+  if(v){ pv.src = v; pv.style.display='block'; }
+  else {
+    // kalau input dikosongkan saat edit, jangan hilangkan preview lama
+    const hasFile = document.getElementById('pFile')?.files?.length;
+    if(!hasFile && !document.getElementById('pId').value){ pv.src=''; pv.style.display='none'; }
+  }
 }
 
 // ADMIN
@@ -255,33 +476,62 @@ function adminTab(t,el){
   document.querySelectorAll('.admin-tabs button').forEach(b=>b.classList.remove('active')); el.classList.add('active');
   document.getElementById('tabProduk').style.display=t==='produk'?'block':'none';
   document.getElementById('tabOrder').style.display=t==='order'?'block':'none';
+  document.getElementById('tabOnline').style.display=t==='online'?'block':'none';
+  if(t==='online') refreshCloudStatus();
 }
 function renderAdmin(){
   document.getElementById('adminLogin').style.display=isAdmin()?'none':'block';
   document.getElementById('adminPanel').style.display=isAdmin()?'block':'none';
   document.getElementById('orderCount').textContent=orders.length;
+  refreshCloudStatus();
   if(!isAdmin()) return;
-  document.getElementById('adminList').innerHTML=products.map(p=>`<div class="a-row"><img src="${p.img}"><div class="grow"><b>${p.name}</b><br><small>${p.cat} • ${rp(p.price)} • Stok ${p.stock}</small></div><button class="btn-edit" onclick="editProduct('${p.id}')">Edit</button><button class="btn-del" onclick="delProduct('${p.id}')">Hapus</button></div>`).join('');
+  document.getElementById('adminList').innerHTML=products.map(p=>`<div class="a-row"><img src="${p.img}" onerror="this.src='https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80&auto=format&fit=crop'"><div class="grow"><b>${p.name}</b><br><small>${p.cat} • ${rp(p.price)} • Stok ${p.stock}</small></div><button class="btn-edit" onclick="editProduct('${p.id}')">Edit</button><button class="btn-del" onclick="delProduct('${p.id}')">Hapus</button></div>`).join('');
   document.getElementById('orderList').innerHTML=orders.length?orders.map((o,i)=>`<div class="a-row"><div class="grow"><b>${o.id} — ${o.nama}</b><br><small>${o.date} • ${o.items.map(x=>x.name+' EU'+x.size+' x'+x.qty).join(', ')}<br>Total ${rp(o.total)} • ${o.bayar} • ${o.wa}</small><br><span class="status ${o.status}">${o.status.toUpperCase()}</span></div><button class="btn-edit" onclick="orderStatus(${i})">Ubah Status</button><button class="btn-del" onclick="delOrder(${i})">Hapus</button></div>`).join(''):'<p style="color:#888">Belum ada pesanan.</p>';
 }
-function saveProduct(e){
+async function saveProduct(e){
   e.preventDefault();
+  if(!imgReady) return toast('Tunggu gambar selesai diproses... ⏳');
   const id=document.getElementById('pId').value||'p'+Date.now();
+  const ix=products.findIndex(p=>p.id===id);
+  const filePicked = document.getElementById('pFile')?.files?.length > 0;
+  let imgVal=(document.getElementById('pImg').value||'').trim();
+  // Mode online: kalau user pilih file tapi URL belum jadi (upload gagal di tengah), coba upload ulang saat SIMPAN
+  if(!imgVal && filePicked && isCloud() && pendingBlob){
+    try{
+      toast('Mengupload gambar... ⏳');
+      imgVal = await cloudUploadImage(pendingBlob);
+      document.getElementById('pImg').value = imgVal;
+    }catch(err){ console.warn(err); return toast('Upload gambar gagal, coba lagi 🙏'); }
+  }
+  if(!imgVal && filePicked) return toast('Tunggu gambar selesai diproses... ⏳');
+  // Edit tanpa upload ulang: pertahankan gambar lama (jangan tertimpa fallback)
+  if(!imgVal && ix>=0) imgVal = products[ix].img;
+  if(!imgVal) imgVal = `https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80&auto=format&fit=crop`;
+  // Mode lokal: tolak dataURL raksasa agar tidak merusak localStorage
+  if(!isCloud() && imgVal.startsWith('data:') && imgVal.length > 900000){
+    return toast('Gambar masih kebesaran. Aktifkan tab ONLINE atau pakai gambar lebih kecil 🙏');
+  }
+  const prev = ix>=0 ? products[ix] : null;
   const data={
     id,
     name:document.getElementById('pName').value,
     price:+document.getElementById('pPrice').value,
     old:+document.getElementById('pOld').value||0,
     cat:document.getElementById('pCat').value,
-    img:document.getElementById('pImg').value||`https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80&auto=format&fit=crop`,
+    img:imgVal,
     stock:+document.getElementById('pStock').value||0,
     desc:document.getElementById('pDesc').value||'Sneakers original 100%, BNIB, free legit check.',
-    rating:4.8, sold:0
+    rating:prev?.rating||4.8, sold:prev?.sold||0
   };
-  const ix=products.findIndex(p=>p.id===id);
   if(ix>=0) products[ix]={...products[ix],...data}; else products.unshift(data);
-  save('epilog_products',products); renderProducts(); renderAdmin(); clearForm();
-  toast('Produk tersimpan! ✅');
+  if(!save('epilog_products',products)) return; // gagal (quota penuh) -> jangan render/clear
+  renderProducts(); renderAdmin(); clearForm();
+  toast(isCloud() ? 'Produk online! Tampil semua pengunjung ✅' : 'Produk tersimpan lokal! ✅ (aktifkan ONLINE agar global)');
+  // sinkron ke cloud (non-blocking, tapi laporkan gagal)
+  if(isCloud()){
+    try{ await cloudUpsertProduct(data); }
+    catch(err){ console.warn(err); toast('Tersimpan lokal, sync online gagal 🙏'); }
+  }
 }
 function editProduct(id){
   const p=products.find(x=>x.id===id);
@@ -293,13 +543,23 @@ function editProduct(id){
   document.getElementById('pImg').value=p.img.startsWith('data:')?'':p.img;
   document.getElementById('pStock').value=p.stock;
   document.getElementById('pDesc').value=p.desc;
+  const f=document.getElementById('pFile'); if(f) f.value='';
+  imgReady = true; pendingBlob = null; setUploadState('');
   const pv=document.getElementById('pPreview');
   if(pv){pv.src=p.img;pv.style.display='block';}
   window.scrollTo(0,0);
   toast('Edit mode: ubah lalu SIMPAN ✅');
 }
-function delProduct(id){if(confirm('Hapus produk?')){products=products.filter(p=>p.id!==id);save('epilog_products',products);renderProducts();renderAdmin()}}
-function clearForm(){['pId','pName','pPrice','pOld','pImg','pDesc'].forEach(i=>document.getElementById(i).value='');document.getElementById('pStock').value=10;const f=document.getElementById('pFile');if(f)f.value='';const pv=document.getElementById('pPreview');if(pv){pv.src='';pv.style.display='none';}}
+async function delProduct(id){
+  if(!confirm('Hapus produk?')) return;
+  products=products.filter(p=>p.id!==id);
+  save('epilog_products',products);renderProducts();renderAdmin();
+  if(isCloud()){
+    try{ await cloudDeleteProduct(id); toast('Terhapus online juga ✅'); }
+    catch(err){ console.warn(err); toast('Terhapus lokal, sync online gagal 🙏'); }
+  }
+}
+function clearForm(){['pId','pName','pPrice','pOld','pImg','pDesc'].forEach(i=>document.getElementById(i).value='');document.getElementById('pStock').value=10;const f=document.getElementById('pFile');if(f)f.value='';const pv=document.getElementById('pPreview');if(pv){pv.src='';pv.style.display='none';} imgReady=true; pendingBlob=null; setUploadState('');}
 function orderStatus(i){orders[i].status=orders[i].status==='proses'?'selesai':'proses';save('epilog_orders',orders);renderAdmin()}
 function delOrder(i){if(confirm('Hapus pesanan?')){orders.splice(i,1);save('epilog_orders',orders);renderAdmin()}}
 function exportData(){
@@ -310,6 +570,7 @@ function resetData(){
   if(!confirm('Reset ke data awal?')) return;
   products=[...DEFAULT_PRODUCTS];orders=[];cart=[];save('epilog_products',products);save('epilog_orders',orders);save('epilog_cart',cart);
   renderProducts();renderCart();renderAdmin();
+  if(isCloud() && confirm('Hapus juga data ONLINE dan kembalikan ke awal?')) pushLocalToCloud();
 }
 
 // countdown dummy
@@ -322,4 +583,4 @@ function tick(){
 setInterval(tick,1000);
 
 // init
-renderProducts(); renderCart(); tick();
+renderProducts(); renderCart(); tick(); refreshCloudStatus(); initCloud();

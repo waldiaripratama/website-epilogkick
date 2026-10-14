@@ -256,8 +256,8 @@
     <form onsubmit="adminLogin(event)" class="co-form"><input type="password" id="adminPass" placeholder="Password admin" required><button class="btn btn-black w-full" type="submit">MASUK</button></form>
   </div>
   <div id="adminPanel" style="display:none">
-    <div class="admin-head"><h2>ADMIN PANEL</h2><div><button class="btn btn-ghost" onclick="exportData()">⬇ Export</button> <button class="btn btn-ghost" onclick="resetData()">↺ Reset</button> <button class="btn btn-black" onclick="adminLogout()">Logout</button></div></div>
-    <div class="admin-tabs"><button class="active" onclick="adminTab('produk',this)">PRODUK</button><button onclick="adminTab('order',this)">PESANAN (<span id="orderCount">0</span>)</button></div>
+    <div class="admin-head"><h2>ADMIN PANEL <span id="cloudBadge" style="font-size:12px;vertical-align:middle"></span></h2><div><button class="btn btn-ghost" onclick="exportData()">⬇ Export</button> <button class="btn btn-ghost" onclick="resetData()">↺ Reset</button> <button class="btn btn-black" onclick="adminLogout()">Logout</button></div></div>
+    <div class="admin-tabs"><button class="active" onclick="adminTab('produk',this)">PRODUK</button><button onclick="adminTab('order',this)">PESANAN (<span id="orderCount">0</span>)</button><button onclick="adminTab('online',this)">🌐 ONLINE</button></div>
     <div id="tabProduk">
       <form onsubmit="saveProduct(event)" class="admin-form">
         <input type="hidden" id="pId">
@@ -265,11 +265,12 @@
         <input id="pPrice" required type="number" min="1000" placeholder="Harga (cth 1299000)">
         <input id="pOld" type="number" placeholder="Harga coret (opsional)">
         <select id="pCat"><option>Nike</option><option>Jordan</option><option>Adidas</option><option>New Balance</option><option>Vans</option><option>Puma</option><option>Limited</option></select>
-        <input id="pImg" placeholder="URL gambar ATAU upload file di bawah (otomatis terisi)">
+        <input id="pImg" placeholder="URL gambar ATAU upload file di bawah (otomatis terisi)" oninput="syncPreviewFromUrl()">
         <div style="grid-column:1/-1;background:#1a1a1a;border:1px dashed #444;border-radius:12px;padding:12px">
-          <label style="font-size:13px">📷 GANTI GAMBAR KATALOG (upload dari HP/Laptop, maks 1.5MB):<br><input type="file" id="pFile" accept="image/*" onchange="handleImgFile(this)" style="margin-top:8px"></label><br>
-          <img id="pPreview" style="display:none;max-width:160px;border-radius:10px;margin-top:10px" alt="preview">
-          <small style="color:#888">Cara lain: taruh file di folder <code>assets/</code> lalu isi kolom URL dengan <code>assets/nama-file.jpg</code></small>
+          <label style="font-size:13px">📷 GANTI GAMBAR KATALOG (upload dari HP/Laptop, maks 2.5MB, otomatis dikompres):<br><input type="file" id="pFile" accept="image/*" onchange="handleImgFile(this)" style="margin-top:8px"></label><br>
+          <img id="pPreview" style="display:none;max-width:160px;border-radius:10px;margin-top:10px" alt="preview" onerror="this.style.display='none'">
+          <div id="uploadState" style="font-size:12px;color:#888;margin-top:6px"></div>
+          <small style="color:#888">Mode <b id="uploadModeHint">LOKAL</b>: belum setting Online = hanya tampil di browser ini. Aktifkan di tab <b>🌐 ONLINE</b> agar tampil di semua pengunjung. Cara lain: taruh file di <code>assets/</code> lalu isi URL <code>assets/nama-file.jpg</code>.</small>
         </div>
         <input id="pStock" type="number" min="0" value="10" placeholder="Stok">
         <textarea id="pDesc" placeholder="Deskripsi"></textarea>
@@ -279,11 +280,66 @@
       <div id="adminList" class="admin-list"></div>
     </div>
     <div id="tabOrder" style="display:none"><div id="orderList" class="admin-list"></div></div>
+    <div id="tabOnline" style="display:none">
+      <div style="background:#1a1a1a;border:1px solid #333;border-radius:14px;padding:16px;display:grid;gap:10px">
+        <div style="font-weight:800">🌐 MODE ONLINE — upload terlihat semua pengunjung <span id="cloudStatus2" style="font-weight:400;color:#888"></span></div>
+        <small style="color:#aaa;line-height:1.6">Sekali setting (gratis, ±10 menit, tanpa coding). Setelah itu tiap upload via <b>Choose File → SIMPAN</b> otomatis tersimpan online &amp; tampil di semua HP/pengunjung.<br>Mode lokal (belum setting) = upload hanya tampil di browser ini.</small>
+        <label style="font-size:13px;font-weight:700;display:grid;gap:6px">Supabase URL<input id="cfgUrl" placeholder="https://xxxx.supabase.co" style="background:#1f1f1f;border:1px solid #333;color:#fff;padding:12px 14px;border-radius:12px;width:100%"></label>
+        <label style="font-size:13px;font-weight:700;display:grid;gap:6px">Supabase Anon Key<input id="cfgKey" placeholder="eyJhbGciOi..." style="background:#1f1f1f;border:1px solid #333;color:#fff;padding:12px 14px;border-radius:12px;width:100%"></label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-volt" onclick="saveCloudCfg()">💾 SIMPAN &amp; AKTIFKAN</button>
+          <button class="btn btn-ghost" onclick="testCloud()">🔌 TES KONEKSI</button>
+          <button class="btn btn-ghost" onclick="pushLocalToCloud()">⬆ UPLOAD SEMUA PRODUK LOKAL → ONLINE</button>
+          <button class="btn btn-ghost" onclick="disconnectCloud()">⏏ PUTUSKAN</button>
+        </div>
+        <div id="cloudStatus" style="font-size:13px;color:#888"></div>
+        <details style="font-size:13px;color:#aaa">
+          <summary style="cursor:pointer;font-weight:800;color:#ccff00">📋 Cara setup sekali saja (klik untuk buka)</summary>
+          <ol style="margin:10px 0 0 18px;line-height:1.8">
+            <li>Buka <b>supabase.com</b> → daftar gratis → <b>New project</b> (nama: epilogkick, password bebas, region Singapore).</li>
+            <li>Tunggu ±2 menit → masuk menu <b>SQL Editor → New query</b> → copy-paste SQL di bawah → <b>RUN</b>.</li>
+            <li>Masuk menu <b>Project Settings → API</b> → copy <b>Project URL</b> + <b>anon public key</b> → paste ke kolom di atas → <b>SIMPAN &amp; AKTIFKAN</b>.</li>
+            <li>Klik <b>⬆ UPLOAD SEMUA PRODUK LOKAL → ONLINE</b> sekali. Selesai — upload berikutnya otomatis online.</li>
+          </ol>
+          <pre id="cloudSql" style="white-space:pre-wrap;background:#0a0a0a;border:1px solid #333;border-radius:10px;padding:12px;margin-top:10px;font-size:11px;color:#ddd">create table if not exists products (
+  id text primary key,
+  name text not null,
+  price integer default 0,
+  old integer default 0,
+  cat text default 'Nike',
+  img text default '',
+  stock integer default 0,
+  "desc" text default '',
+  rating numeric default 4.8,
+  sold integer default 0
+);
+alter table products enable row level security;
+drop policy if exists "public read" on products;
+create policy "public read" on products for select using (true);
+drop policy if exists "public write" on products;
+create policy "public write" on products for all using (true) with check (true);
+
+insert into storage.buckets (id, name, public)
+values ('product-images','product-images', true)
+on conflict (id) do update set public = true;
+drop policy if exists "public read images" on storage.objects;
+create policy "public read images" on storage.objects for select using (bucket_id='product-images');
+drop policy if exists "public upload images" on storage.objects;
+create policy "public upload images" on storage.objects for insert with check (bucket_id='product-images');
+drop policy if exists "public update images" on storage.objects;
+create policy "public update images" on storage.objects for update using (bucket_id='product-images');
+drop policy if exists "public delete images" on storage.objects;
+create policy "public delete images" on storage.objects for delete using (bucket_id='product-images');</pre>
+          <button class="btn btn-ghost" onclick="copyCloudSql()">📋 COPY SQL</button>
+        </details>
+      </div>
+    </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app.js"></script>
 </body>
 </html>

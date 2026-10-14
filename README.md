@@ -23,14 +23,16 @@ Ganti nomor WA: edit `WA_ADMIN` di `app.js` (format 62, tanpa +/spasi).
 
 ## Katalog Sepatu — Cara Ubah Gambar / Produk
 
-### Opsi A: Admin Panel (tanpa coding) — Recommended
+### Opsi A: Admin Panel — Mode ONLINE (tampil semua pengunjung, tanpa coding) ✅
+1. Klik ⚙️ → `admin123` → buka tab **🌐 ONLINE**.
+2. Setup sekali saja (gratis ±10 menit): buat project di **supabase.com** → SQL Editor → RUN SQL yang ada di tab ONLINE → copy **Project URL + anon key** → paste → **SIMPAN & AKTIFKAN** → **⬆ UPLOAD SEMUA PRODUK LOKAL → ONLINE**.
+3. Sehari-hari: tab PRODUK → `Choose File` → tunggu `✅ Sudah online` → SIMPAN. Langsung tampil di semua HP/pengunjung.
+
+### Opsi B: Admin Panel — Mode LOKAL (tanpa setup)
 1. Klik ikon ⚙️ di navbar → password `admin123`
 2. Tab PRODUK → isi Nama, Harga, Kategori, Stok, Deskripsi
-3. Gambar: pilih salah satu:
-   - Paste URL gambar ke kolom `URL gambar`, ATAU
-   - Klik `Choose File` → upload foto dari HP/Laptop (preview otomatis)
-4. Klik SIMPAN. Untuk ubah: klik Edit → ganti → SIMPAN. Hapus: klik Hapus.
-5. Data tersimpan di browser (localStorage). Tombol Export untuk backup `epilogkick-data.json`.
+3. Gambar: paste URL ke kolom `URL gambar`, ATAU klik `Choose File` (preview otomatis)
+4. Klik SIMPAN. Catatan: hanya tampil di browser itu (badge 📴 LOKAL).
 
 ### Opsi B: Edit file products.json
 File `products.json` berisi 12 produk contoh. Ubah field `name`, `price`, `img`, `stock`, dll lalu refresh.
