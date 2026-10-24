@@ -1,0 +1,34 @@
+# =============================================================================
+# Netlify — auto deploy dari GitHub
+# Situs ini statis (HTML/CSS/JS), jadi tidak perlu build.
+# Data produk & foto produknya ada di Supabase, bukan di server.
+# =============================================================================
+
+[build]
+  publish = "."
+  command = ""
+
+# Halaman utama & admin
+[[redirects]]
+  from = "/admin"
+  to = "/admin.html"
+  status = 200
+
+# -----------------------------------------------------------------------------
+# Cache aset gambar (nama file unik, jadi aman di-cache 7 hari)
+# -----------------------------------------------------------------------------
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+# -----------------------------------------------------------------------------
+# Header keamanan
+# -----------------------------------------------------------------------------
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"

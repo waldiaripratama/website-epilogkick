@@ -163,6 +163,7 @@ footer{background:#000;border-top:1px solid var(--line);padding:50px 0 0}
 .btn-edit{background:var(--volt)}.btn-del{background:#ff4444;color:#fff}
 .status{padding:4px 10px;border-radius:100px;font-size:12px;font-weight:800;background:#333}.status.selesai{background:#22aa55}.status.proses{background:#ffaa00;color:#000}
 .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--volt);color:#000;font-weight:800;padding:14px 24px;border-radius:100px;z-index:99;transition:.25s;max-width:90vw;text-align:center}
+.bank-info{background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:14px;margin-top:14px}.bank-row{display:flex;justify-content:space-between;align-items:center;margin:6px 0;font-size:14px}.bank-row b{color:#fff}.bank-row span{color:var(--mut);font-weight:700;letter-spacing:.05em}
 .toast.show{transform:translateX(-50%) translateY(0)}
 code{background:#222;padding:2px 8px;border-radius:6px;color:var(--volt)}
 @media(max-width:960px){.hero-inner,.drop-grid,.about-grid,.modal-grid,.co-grid{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}.testi-grid{grid-template-columns:1fr}.foot-grid{grid-template-columns:1fr 1fr}.nav-links{display:none}.burger{display:block}.search-wrap{display:none}.mobile-menu.show{display:flex}.hero-card img{height:220px}.admin-form{grid-template-columns:1fr}}

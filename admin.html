@@ -48,12 +48,14 @@
   <!-- LOGIN -->
   <div id="loginCard" class="card login-box">
     <h2>ADMIN LOGIN 🔐</h2>
-    <p class="sub">Masuk untuk upload foto & update katalog.<br>Password default: <code>admin123</code></p>
+    <p class="sub">Masuk untuk upload foto & update katalog.<br>Di situs online: pakai <b>email + password</b> akun admin Supabase.</p>
     <form onsubmit="doLogin(event)" style="display:grid;gap:10px">
-      <input type="password" id="pass" placeholder="Password admin" required style="background:#1f1f1f;border:1px solid #333;color:#fff;padding:14px 16px;border-radius:12px;width:100%">
+      <input type="email" id="loginEmail" placeholder="Email admin" autocomplete="username" style="background:#1f1f1f;border:1px solid #333;color:#fff;padding:14px 16px;border-radius:12px;width:100%">
+      <input type="password" id="pass" placeholder="Password admin" required autocomplete="current-password" style="background:#1f1f1f;border:1px solid #333;color:#fff;padding:14px 16px;border-radius:12px;width:100%">
       <button class="btn btn-volt w-full" type="submit">MASUK →</button>
     </form>
     <p class="hint" style="margin-top:12px" id="loginHint"></p>
+    <p class="hint" style="margin-top:8px">Belum punya akun? Buat di <b>Supabase → Authentication → Users → Add user</b> (centang <i>Auto Confirm User</i>), lalu masukkan email-nya di <code>config.js</code>.</p>
   </div>
 
   <!-- PANEL -->
@@ -91,6 +93,7 @@
       <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
         <h2>KATALOG (<span id="count">0</span>)</h2>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-volt" style="padding:10px 16px" onclick="pushAllOnline()" id="pushAllBtn">⬆ Upload Semua Produk → ONLINE</button>
           <button class="btn btn-ghost" style="padding:10px 16px" onclick="loadProducts()">↻ Refresh</button>
           <button class="btn btn-ghost" style="padding:10px 16px" onclick="exportData()">⬇ Export</button>
         </div>
@@ -112,11 +115,70 @@
 </div>
 
 <div class="toast" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
 <script>
 const $ = id => document.getElementById(id);
-let SERVER = false;       // true = backend /api tersedia
+let SERVER = false;       // true = backend /api tersedia (npm start / VPS)
+let CLOUD = false;        // true = Supabase tersedia (produksi / Netlify)
+let CLOUD_ERR = '';       // pesan error kalau Supabase terdeteksi tapi belum siap
+let SB = null;            // client supabase
 let products = [];
 let uploading = false;
+
+// ===== KONFIGURASI (dari config.js) =====
+const CFG = window.EPILOG_CONFIG || {};
+const SB_URL = (CFG.supabaseUrl || '').trim().replace(/\/$/,'');
+const SB_KEY = (CFG.supabaseAnonKey || '').trim();
+const SB_EMAIL = (CFG.adminEmail || '').trim();
+const SB_BUCKET = CFG.storageBucket || 'product-images';
+
+function sbClient(){
+  if(SB) return SB;
+  if(!SB_URL || !SB_KEY) return null;
+  if(!window.supabase) return null;
+  SB = window.supabase.createClient(SB_URL, SB_KEY);
+  return SB;
+}
+function cloudConfigured(){ return !!(SB_URL && SB_KEY); }
+
+// ===== MODE CLOUD (Supabase) =====
+async function cloudUser(){
+  const c = sbClient(); if(!c) return null;
+  try{ const {data} = await c.auth.getSession(); return (data && data.session && data.session.user) || null; }
+  catch{ return null; }
+}
+async function cloudSignIn(email, password){
+  const c = sbClient(); if(!c) throw new Error('Supabase belum terkonfigurasi');
+  const {data, error} = await c.auth.signInWithPassword({email:String(email||'').trim(), password:String(password||'')});
+  if(error) throw error;
+  return data && data.user;
+}
+async function cloudSignOut(){ const c = sbClient(); if(c){ try{ await c.auth.signOut(); }catch{} } }
+async function cloudFetchProducts(){
+  const c = sbClient(); if(!c) throw new Error('Supabase belum terkonfigurasi');
+  const {data, error} = await c.from('products').select('*').order('id');
+  if(error) throw error;
+  return data || [];
+}
+async function cloudUpsertProduct(p){
+  const c = sbClient(); if(!c) throw new Error('Supabase belum terkonfigurasi');
+  const {error} = await c.from('products').upsert(p);
+  if(error) throw error;
+}
+async function cloudDeleteProduct(id){
+  const c = sbClient(); if(!c) throw new Error('Supabase belum terkonfigurasi');
+  const {error} = await c.from('products').delete().eq('id', id);
+  if(error) throw error;
+}
+async function cloudUploadImage(blob, filename){
+  const c = sbClient(); if(!c) throw new Error('Supabase belum terkonfigurasi');
+  const path = filename || ('p-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,7) + '.jpg');
+  const {error} = await c.storage.from(SB_BUCKET).upload(path, blob, {contentType:'image/jpeg', upsert:true});
+  if(error) throw error;
+  const {data} = c.storage.from(SB_BUCKET).getPublicUrl(path);
+  return data.publicUrl;
+}
 
 function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(t._x); t._x=setTimeout(()=>t.classList.remove('show'),2400); }
 function token(){ return localStorage.getItem('epilog_admin_token') || ''; }
@@ -132,16 +194,51 @@ async function detect(){
   if(!SERVER){
     try{ const r = await fetch('/api/products', {cache:'no-store'}); if(r.ok) SERVER = true; }catch{}
   }
+  // b) Supabase (produksi / hosting statis)
+  if(!SERVER && cloudConfigured()){
+    try{
+      const c = sbClient();
+      if(c){
+        const {error} = await c.from('products').select('id').limit(1);
+        if(!error) CLOUD = true;
+        else CLOUD_ERR = error.message || 'gagal terhubung';
+      }else CLOUD_ERR = 'library supabase belum termuat';
+    }catch(e){ CLOUD_ERR = e.message || 'gagal terhubung'; }
+  }
+  // c) sesi admin yang masih tersimpan di browser ini?
+  if(CLOUD){
+    const u = await cloudUser();
+    if(u) localStorage.setItem('epilog_admin','1');
+  }
   const b = $('modeBadge');
   if(SERVER){ b.textContent='🌐 SERVER ONLINE — upload tampil semua pengunjung'; b.classList.add('online'); $('modeHint').innerHTML='Pilih foto dari HP/Laptop → otomatis terupload <b>online</b> → klik SIMPAN. Semua pengunjung langsung lihat update. Tanpa coding.'; }
-  else { b.textContent='📴 LOKAL — hanya browser ini (jalankan npm start agar online)'; b.classList.remove('online'); $('modeHint').innerHTML='Backend belum terdeteksi, jadi tersimpan <b>lokal</b> dulu (hanya browser ini). Agar online untuk semua pengunjung: jalankan <code>npm start</code> / deploy ke Render, lalu buka admin via server itu.'; }
-  $('loginHint').textContent = SERVER ? 'Terhubung ke server ✅ — login untuk mulai upload.' : 'Server tidak terdeteksi (mode lokal). Kamu tetap bisa kelola katalog di browser ini.';
+  else if(CLOUD){ b.textContent='🌐 SUPABASE ONLINE — upload tampil semua pengunjung'; b.classList.add('online'); $('modeHint').innerHTML='Login pakai <b>email + password</b> akun admin. Pilih foto dari HP/Laptop → otomatis terupload <b>online</b> → klik SIMPAN. Semua pengunjung langsung lihat update. Tanpa coding.'; }
+  else { b.textContent='📴 LOKAL — hanya browser ini (jalankan npm start agar online)'; b.classList.remove('online'); $('modeHint').innerHTML = CLOUD_ERR
+      ? 'Supabase terdeteksi tapi belum siap: <b>' + CLOUD_ERR + '</b><br>Kemungkinan tabel <code>products</code> belum ada — jalankan file <code>supabase-setup.sql</code> di Supabase → SQL Editor → RUN. (Untuk mencoba tanpa setup: jalankan <code>npm start</code>.)'
+      : 'Backend belum terdeteksi, jadi tersimpan <b>lokal</b> dulu (hanya browser ini). Agar online untuk semua pengunjung: deploy ke Netlify + isi <code>config.js</code>.'; }
+  $('loginHint').textContent = (SERVER || CLOUD) ? 'Terhubung ke server online ✅ — login untuk mulai upload.' : 'Server tidak terdeteksi (mode lokal). Kamu tetap bisa kelola katalog di browser ini.';
+  const em = $('loginEmail');
+  if(em && !em.value) em.value = SB_EMAIL;
 }
 
 // 2) Login
 async function doLogin(e){
   e.preventDefault();
   const pw = $('pass').value;
+  const em = ($('loginEmail').value || SB_EMAIL || '').trim();
+  // a) Supabase (produksi)
+  if(CLOUD){
+    try{
+      const u = await cloudSignIn(em, pw);
+      if(!u) return toast('Login gagal 🙏');
+      localStorage.setItem('epilog_admin','1');
+      localStorage.removeItem('epilog_admin_token');
+      enter();
+      toast('Welcome, Admin! 👑');
+    }catch(err){ console.warn(err); toast((err && err.message) ? err.message : 'Login gagal 🙏'); }
+    return;
+  }
+  // b) server sendiri (npm start / VPS)
   if(SERVER){
     try{
       const r = await fetch('api/login', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({password: pw})});
@@ -152,13 +249,16 @@ async function doLogin(e){
       enter();
       toast('Welcome, Admin! 👑');
     }catch{ toast('Server tidak merespon 🙏'); }
-  } else {
-    // mode lokal: password default lama
-    if(pw === 'admin123'){ localStorage.setItem('epilog_admin','1'); enter(); toast('Login lokal ✅'); }
-    else toast('Password salah!');
+    return;
   }
+  // c) mode lokal: password default lama
+  if(pw === 'admin123'){ localStorage.setItem('epilog_admin','1'); enter(); toast('Login lokal ✅'); }
+  else toast('Password salah!');
 }
-function logout(){ localStorage.removeItem('epilog_admin_token'); localStorage.removeItem('epilog_admin'); location.reload(); }
+async function logout(){
+  if(CLOUD) await cloudSignOut();
+  localStorage.removeItem('epilog_admin_token'); localStorage.removeItem('epilog_admin'); location.reload();
+}
 function enter(){
   $('loginCard').style.display='none';
   $('panel').style.display='block';
@@ -174,10 +274,45 @@ async function loadProducts(){
       const r = await fetch('api/products', {cache:'no-store'});
       products = await r.json();
     }catch{ products = loadLocal() || []; }
+  } else if(CLOUD){
+    try{
+      products = await cloudFetchProducts();
+    }catch(e){
+      console.warn(e);
+      products = loadLocal() || await (await fetch('products.json')).json().catch(()=>[]);
+    }
   } else {
     products = loadLocal() || await (await fetch('products.json')).json().catch(()=>[]);
   }
   render();
+}
+// 3b) Upload semua katalog (dari products.json) ke Supabase — sekali saja
+async function pushAllOnline(){
+  if(!CLOUD){ toast('Supabase belum aktif 🙏'); return; }
+  const btn = $('pushAllBtn');
+  if(btn){ btn.disabled = true; btn.textContent = '⏳ Mengupload...'; }
+  try{
+    const u = await cloudUser();
+    if(!u) { toast('Login dulu sebelum upload 🙏'); return; }
+    let list = products;
+    if(!list || !list.length){
+      try{ list = await (await fetch('products.json', {cache:'no-store'})).json(); }catch{}
+    }
+    if(!list || !list.length){ toast('Tidak ada produk untuk diupload!'); return; }
+    let ok = 0;
+    for(const p of list){
+      try{ await cloudUpsertProduct(p); ok++; }
+      catch(e){ console.warn('gagal:', p.id, e); }
+    }
+    await loadProducts();
+    if(ok === list.length) toast('Semua produk online! ✅ (' + ok + ')');
+    else toast('Selesai: ' + ok + '/' + list.length + ' produk online ⚠️');
+  }catch(e){
+    console.warn(e);
+    toast('Gagal upload: ' + (e.message || e) + ' 🙏');
+  }finally{
+    if(btn){ btn.disabled = false; btn.textContent = '⬆ Upload Semua Produk → ONLINE'; }
+  }
 }
 function rp(n){ return 'Rp ' + Number(n||0).toLocaleString('id-ID'); }
 function render(){
@@ -246,6 +381,23 @@ async function onFile(input){
       $('progBar').style.width='100%';
       $('upState').textContent='✅ Terupload online: ' + url;
       toast('Foto online! Isi nama+harga lalu SIMPAN ✅');
+    } else if(CLOUD){
+      $('upState').textContent='⏳ mengupload online...';
+      try{
+        const url = await cloudUploadImage(blob);
+        $('pImg').value = url;
+        if(pv){ pv.src = url; }
+        $('progBar').style.width='100%';
+        $('upState').textContent='✅ Terupload online: ' + url;
+        toast('Foto online! Isi nama+harga lalu SIMPAN ✅');
+      }catch(e){
+        console.warn(e);
+        // fallback: simpan sementara di browser (tidak muncul ke pengunjung)
+        const dataUrl = await new Promise(res=>{ const r=new FileReader(); r.onload=ev=>res(ev.target.result); r.readAsDataURL(blob); });
+        $('pImg').value = dataUrl;
+        $('upState').textContent='⚠️ Upload online gagal, tersimpan lokal dulu';
+        toast('Upload gagal: ' + (e.message||e) + ' 🙏');
+      }
     } else {
       // mode lokal: dataURL
       const dataUrl = await new Promise(res=>{ const r=new FileReader(); r.onload=e=>res(e.target.result); r.readAsDataURL(blob); });
@@ -279,6 +431,15 @@ async function saveProduct(e){
     const r = await fetch('api/products',{method:'POST',headers:{'Content-Type':'application/json','x-admin-token':token()},body:JSON.stringify(data)});
     if(!r.ok){ const j=await r.json().catch(()=>({})); return toast(j.error||'Gagal simpan (login dulu?)'); }
     toast('✅ Tersimpan ONLINE — langsung tampil di toko!');
+  } else if(CLOUD){
+    try{
+      await cloudUpsertProduct(data);
+      toast('✅ Tersimpan ONLINE — langsung tampil di toko!');
+    }catch(e){
+      console.warn(e);
+      toast('Gagal simpan online: ' + (e.message||e) + ' 🙏');
+      return;
+    }
   } else {
     const ix = products.findIndex(x=>x.id===id);
     if(ix>=0) products[ix]={...products[ix],...data}; else products.unshift({rating:4.8,sold:0,...data});
@@ -302,6 +463,14 @@ async function delP(id){
   if(SERVER){
     await fetch('api/products/'+id,{method:'DELETE',headers:{'x-admin-token':token()}});
     toast('Terhapus online ✅');
+  } else if(CLOUD){
+    try{
+      await cloudDeleteProduct(id);
+      toast('Terhapus online ✅');
+    }catch(e){
+      console.warn(e);
+      toast('Gagal hapus online: ' + (e.message||e) + ' 🙏');
+    }
   } else {
     products = products.filter(x=>x.id!==id);
     localStorage.setItem('epilog_products', JSON.stringify(products));

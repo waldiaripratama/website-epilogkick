@@ -1,16 +1,880 @@
 const DEFAULT_PRODUCTS = [
-  {id:'p1', name:'Epilog Velocity "Infrared"', cat:'Nike', price:1899000, old:2299000, stock:12, rating:4.9, sold:2300, img:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80&auto=format&fit=crop', desc:'Siluet lari dengan cushioning responsif dan colorway infrared yang jadi incaran. Nyaman buat harian, garang buat nongkrong.'},
-  {id:'p2', name:'Jordan 1 Mid "Panda Black"', cat:'Jordan', price:2199000, old:2599000, stock:8, rating:5.0, sold:1800, img:'https://images.unsplash.com/photo-1552346154-21d32810aba3?w=800&q=80&auto=format&fit=crop', desc:'Ikon abadi. Kulit premium hitam-putih yang masuk ke semua outfit. BNIB + extra laces.'},
-  {id:'p3', name:'Dunk Low "Street White"', cat:'Nike', price:1749000, old:0, stock:15, rating:4.8, sold:3100, img:'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80&auto=format&fit=crop', desc:'Sneakers sejuta umat yang tidak pernah salah. Clean, versatile, gampang di-mix.'},
-  {id:'p4', name:'Epilog Runner "Volt Strike"', cat:'Adidas', price:1499000, old:1899000, stock:20, rating:4.7, sold:1200, img:'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=800&q=80&auto=format&fit=crop', desc:'Runner ringan dengan boost-like foam. Cocok buat lari 5K maupun daily beater.'},
-  {id:'p5', name:'Classic Old Skool "Concrete"', cat:'Vans', price:1099000, old:0, stock:25, rating:4.8, sold:4200, img:'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=800&q=80&auto=format&fit=crop', desc:'Skate classic yang tidak lekang waktu. Kanvas durable + waffle sole lengket.'},
-  {id:'p6', name:'NB 530 "Silver Beige"', cat:'New Balance', price:1699000, old:1999000, stock:10, rating:4.9, sold:2600, img:'https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=800&q=80&auto=format&fit=crop', desc:'Retro runner paling hype 2025-2026. Mesh breathable, ABZORB cushioning empuk.'},
-  {id:'p7', name:'Epilog Court "Lemon Haze"', cat:'Limited', price:1399000, old:0, stock:6, rating:4.9, sold:800, img:'https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=800&q=80&auto=format&fit=crop', desc:'Drop terbatas Concrete Jungle. Cuma 200 pasang se-Indonesia. Numbered box.'},
-  {id:'p8', name:'Air Zoom "Night Black"', cat:'Nike', price:1999000, old:0, stock:9, rating:4.7, sold:950, img:'https://images.unsplash.com/photo-1512374382149-233c42b6a83b?w=800&q=80&auto=format&fit=crop', desc:'Full black stealth mode. Favorit anak motor & streetwear. Water-repellent upper.'},
-  {id:'p9', name:'Superstar "Vintage White"', cat:'Adidas', price:1299000, old:1599000, stock:18, rating:4.6, sold:1500, img:'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&q=80&auto=format&fit=crop', desc:'Shell-toe legend sejak 1969. Kulit halus, cocok buat smart-casual.'},
-  {id:'p10', name:'Epilog Knit "Cloud Grey"', cat:'New Balance', price:1599000, old:0, stock:14, rating:4.8, sold:1100, img:'https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=800&q=80&auto=format&fit=crop', desc:'Knit ringan seperti kaos kaki. Paling nyaman buat seharian jalan.'},
-  {id:'p11', name:'RS-X "Bubblegum"', cat:'Puma', price:1349000, old:1699000, stock:11, rating:4.5, sold:700, img:'https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=800&q=80&auto=format&fit=crop', desc:'Chunky sneakers dengan warna berani. Statement piece buat outfit simpel.'},
-  {id:'p12', name:'Blazer "Retro High"', cat:'Limited', price:1849000, old:2199000, stock:5, rating:5.0, sold:600, img:'https://images.unsplash.com/photo-1597045566677-8cf032ed6634?w=800&q=80&auto=format&fit=crop', desc:'High-cut retro basketball. Exposed foam + vintage swoosh. Auto naik level.'},
+  {
+    "id": "epk-nike-air-max-tn-thermoractive-blue",
+    "name": "Nike Air Max Tn Thermoractive Blue",
+    "price": 550000,
+    "old": 0,
+    "cat": "Nike",
+    "img": "assets/uploads/nike-air-max-tn-thermoractive-blue.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-nike-air-max-tn-thermoractive-green",
+    "name": "Nike Air Max Tn Thermoractive Green",
+    "price": 550000,
+    "old": 0,
+    "cat": "Nike",
+    "img": "assets/uploads/nike-air-max-tn-thermoractive-green.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-nike-air-max-tn-thermoractive-purple",
+    "name": "Nike Air Max Tn Thermoractive Purple",
+    "price": 550000,
+    "old": 0,
+    "cat": "Nike",
+    "img": "assets/uploads/nike-air-max-tn-thermoractive-purple.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-nike-air-max-tn-thermoractive-red",
+    "name": "Nike Air Max Tn Thermoractive Red",
+    "price": 550000,
+    "old": 0,
+    "cat": "Nike",
+    "img": "assets/uploads/nike-air-max-tn-thermoractive-red.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-nike-p-6000-premium-anthracite-smoke-grey-men",
+    "name": "Nike P-6000 Premium Anthracite Smoke Grey Men",
+    "price": 550000,
+    "old": 0,
+    "cat": "Nike",
+    "img": "assets/uploads/nike-p-6000-premium-anthracite-smoke-grey-men.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-nike-p6000-white-elemental-pink-metallic-silver",
+    "name": "Nike P6000 White Elemental Pink Metallic Silver",
+    "price": 550000,
+    "old": 0,
+    "cat": "Nike",
+    "img": "assets/uploads/nike-p6000-white-elemental-pink-metallic-silver.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-nike-p-6000-metallic-silver-aegean-storm-product",
+    "name": "Nike-P-6000-Metallic-Silver-Aegean-Storm-Product",
+    "price": 550000,
+    "old": 0,
+    "cat": "Nike",
+    "img": "assets/uploads/nike-p-6000-metallic-silver-aegean-storm-product.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-puma-speedcat-ballet-black-mauve-mist",
+    "name": "Puma Speedcat Ballet Black Mauve Mist",
+    "price": 550000,
+    "old": 0,
+    "cat": "Puma",
+    "img": "assets/uploads/puma-speedcat-ballet-black-mauve-mist.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-puma-speedcat-ballet-lace-beige",
+    "name": "Puma Speedcat Ballet Lace Beige",
+    "price": 550000,
+    "old": 0,
+    "cat": "Puma",
+    "img": "assets/uploads/puma-speedcat-ballet-lace-beige.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-puma-speedcat-ballet-lace-black",
+    "name": "Puma Speedcat Ballet Lace Black",
+    "price": 550000,
+    "old": 0,
+    "cat": "Puma",
+    "img": "assets/uploads/puma-speedcat-ballet-lace-black.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-puma-speedcat-ballet-laces-silver-black",
+    "name": "Puma Speedcat Ballet Laces Silver Black",
+    "price": 550000,
+    "old": 0,
+    "cat": "Puma",
+    "img": "assets/uploads/puma-speedcat-ballet-laces-silver-black.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-puma-speedcat-ballet-whisp-of-pink",
+    "name": "Puma Speedcat Ballet Whisp of Pink",
+    "price": 550000,
+    "old": 0,
+    "cat": "Puma",
+    "img": "assets/uploads/puma-speedcat-ballet-whisp-of-pink.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-puma-speedcat-coffee-brown-haute-sneakers",
+    "name": "Puma Speedcat Coffee Brown Haute Sneakers",
+    "price": 550000,
+    "old": 0,
+    "cat": "Puma",
+    "img": "assets/uploads/puma-speedcat-coffee-brown-haute-sneakers.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-puma-speedcat-og-black-mauve-mist",
+    "name": "Puma Speedcat OG Black Mauve Mist",
+    "price": 550000,
+    "old": 0,
+    "cat": "Puma",
+    "img": "assets/uploads/puma-speedcat-og-black-mauve-mist.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-puma-speedcat-og-red-leather-white",
+    "name": "Puma Speedcat OG Red Leather White",
+    "price": 550000,
+    "old": 0,
+    "cat": "Puma",
+    "img": "assets/uploads/puma-speedcat-og-red-leather-white.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-puma-speedcat-og-white-pink",
+    "name": "Puma Speedcat OG White Pink",
+    "price": 550000,
+    "old": 0,
+    "cat": "Puma",
+    "img": "assets/uploads/puma-speedcat-og-white-pink.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-puma-speedcat-og-x-sparco-navy-white",
+    "name": "Puma Speedcat OG X Sparco Navy White",
+    "price": 550000,
+    "old": 0,
+    "cat": "Puma",
+    "img": "assets/uploads/puma-speedcat-og-x-sparco-navy-white.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-puma-speedcat-ttf-prairie-tan-frosted-ivory",
+    "name": "Puma Speedcat TTF Prairie Tan Frosted Ivory",
+    "price": 550000,
+    "old": 0,
+    "cat": "Puma",
+    "img": "assets/uploads/puma-speedcat-ttf-prairie-tan-frosted-ivory.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-puma-speedcat-ballet-ruby-shimmer-womens",
+    "name": "Puma-Speedcat-Ballet-Ruby-Shimmer-Womens",
+    "price": 550000,
+    "old": 0,
+    "cat": "Puma",
+    "img": "assets/uploads/puma-speedcat-ballet-ruby-shimmer-womens.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-amsterdam",
+    "name": "Adidas Amsterdam",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-amsterdam.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-blackburn",
+    "name": "Adidas Blackburn",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-blackburn.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-handball-spezial-aluminum-black",
+    "name": "adidas handball spezial - 'Aluminum Black'",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-handball-spezial-aluminum-black.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-handball-spezial-collegiate-navy",
+    "name": "adidas handball spezial - Collegiate Navy",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-handball-spezial-collegiate-navy.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-handball-spezial-carbon-core-black",
+    "name": "Adidas Handball Spezial - Carbon Core Black",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-handball-spezial-carbon-core-black.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-handball-spezial-coreblack-white-cloud",
+    "name": "Adidas Handball Spezial - Coreblack White Cloud",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-handball-spezial-coreblack-white-cloud.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-handball-spezial-green-burgundy-gum",
+    "name": "Adidas Handball Spezial - Green Burgundy Gum",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-handball-spezial-green-burgundy-gum.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-handball-spezial-grey-navy",
+    "name": "Adidas Handball Spezial - Grey Navy",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-handball-spezial-grey-navy.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-handball-spezial-light-blue",
+    "name": "Adidas Handball Spezial - Light Blue",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-handball-spezial-light-blue.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-handball-spezial-maroon",
+    "name": "Adidas Handball Spezial - Maroon",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-handball-spezial-maroon.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-handball-spezial-night-indigo",
+    "name": "Adidas Handball Spezial - Night Indigo",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-handball-spezial-night-indigo.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-handball-spezial-pink",
+    "name": "Adidas Handball Spezial - Pink",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-handball-spezial-pink.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-handball-spezial-violet-gum",
+    "name": "Adidas Handball Spezial - Violet Gum",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-handball-spezial-violet-gum.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-liverpool-green",
+    "name": "Adidas Liverpool Green",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-liverpool-green.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-liverpool-orange",
+    "name": "Adidas Liverpool Orange",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-liverpool-orange.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-liverpool-orange-2",
+    "name": "Adidas Liverpool Orange",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-liverpool-orange-2.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-london-96-core-black-better-scarlet",
+    "name": "Adidas London 96 Core Black Better Scarlet",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-london-96-core-black-better-scarlet.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-london-96-cre-black-better-scarlet",
+    "name": "Adidas London 96 Cre Black Better Scarlet",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-london-96-cre-black-better-scarlet.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-london-blue-red",
+    "name": "Adidas London Blue Red",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-london-blue-red.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-london-blue-red-2",
+    "name": "Adidas London Blue Red",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-london-blue-red-2.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-london-brown-yellow",
+    "name": "Adidas London Brown Yellow",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-london-brown-yellow.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-london-brown-yellow-2",
+    "name": "Adidas London Brown Yellow",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-london-brown-yellow-2.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-london-green-pink",
+    "name": "Adidas London Green Pink",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-london-green-pink.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-london-light-blue-orange",
+    "name": "Adidas London Light Blue Orange",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-london-light-blue-orange.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-london-light-blue-orange-2",
+    "name": "Adidas London Light Blue Orange",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-london-light-blue-orange-2.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-samba-night-indigo",
+    "name": "Adidas Samba - Night Indigo",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-samba-night-indigo.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-samba-white-wonder-mauve",
+    "name": "Adidas Samba - White Wonder Mauve",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-samba-white-wonder-mauve.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-samba-maryjane-cloud-white-pink",
+    "name": "Adidas Samba Maryjane - Cloud White Pink",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-samba-maryjane-cloud-white-pink.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-samba-maryjane-red",
+    "name": "Adidas Samba Maryjane - Red",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-samba-maryjane-red.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-superstar-ii-black",
+    "name": "adidas superstar II - black",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-superstar-ii-black.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-superstar-ii-white",
+    "name": "adidas superstar II - white",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-superstar-ii-white.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-adidas-tobacco-dark-blue",
+    "name": "adidas tobacco - Dark Blue",
+    "price": 550000,
+    "old": 0,
+    "cat": "Adidas",
+    "img": "assets/uploads/adidas-tobacco-dark-blue.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-nike-p-6000-iron-grey-metallic-silver",
+    "name": "Nike P 6000 Iron Grey Metallic Silver",
+    "price": 550000,
+    "old": 0,
+    "cat": "Nike",
+    "img": "assets/uploads/nike-p-6000-iron-grey-metallic-silver.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-nike-p-6000-phantom-baroque-brown",
+    "name": "Nike P 6000 Phantom Baroque Brown",
+    "price": 550000,
+    "old": 0,
+    "cat": "Nike",
+    "img": "assets/uploads/nike-p-6000-phantom-baroque-brown.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-puma-speedcat-coklat",
+    "name": "Puma Speedcat Coklat",
+    "price": 550000,
+    "old": 0,
+    "cat": "Puma",
+    "img": "assets/uploads/puma-speedcat-coklat.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-puma-speedcat-cream",
+    "name": "Puma Speedcat Cream",
+    "price": 550000,
+    "old": 0,
+    "cat": "Puma",
+    "img": "assets/uploads/puma-speedcat-cream.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-puma-speedcat-hitam-pink",
+    "name": "Puma Speedcat Hitam Pink",
+    "price": 550000,
+    "old": 0,
+    "cat": "Puma",
+    "img": "assets/uploads/puma-speedcat-hitam-pink.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-puma-speedcat-merah",
+    "name": "Puma Speedcat Merah",
+    "price": 550000,
+    "old": 0,
+    "cat": "Puma",
+    "img": "assets/uploads/puma-speedcat-merah.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-puma-speedcat-metalik-hitam",
+    "name": "Puma Speedcat Metalik Hitam",
+    "price": 550000,
+    "old": 0,
+    "cat": "Puma",
+    "img": "assets/uploads/puma-speedcat-metalik-hitam.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-puma-speedcat-navy",
+    "name": "Puma Speedcat Navy",
+    "price": 550000,
+    "old": 0,
+    "cat": "Puma",
+    "img": "assets/uploads/puma-speedcat-navy.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "epk-puma-speedcat-pink",
+    "name": "Puma Speedcat Pink",
+    "price": 550000,
+    "old": 0,
+    "cat": "Puma",
+    "img": "assets/uploads/puma-speedcat-pink.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB. Stok terbatas — chat WhatsApp untuk cek size ready.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "p1792004907167",
+    "name": "puma speedcat",
+    "price": 550000,
+    "old": 0,
+    "cat": "Puma",
+    "img": "assets/uploads/p-mv8hga1r-yanyh.jpg",
+    "stock": 10,
+    "desc": "Sneakers original 100%, BNIB.",
+    "rating": 4.8,
+    "sold": 0
+  },
+  {
+    "id": "p1",
+    "name": "Epilog Velocity \"Infrared\"",
+    "cat": "Nike",
+    "price": 550000,
+    "old": 0,
+    "stock": 12,
+    "rating": 4.9,
+    "sold": 2300,
+    "img": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80&auto=format&fit=crop",
+    "desc": "Siluet lari dengan cushioning responsif dan colorway infrared yang jadi incaran."
+  },
+  {
+    "id": "p2",
+    "name": "Jordan 1 Mid \"Panda Black\"",
+    "cat": "Jordan",
+    "price": 550000,
+    "old": 0,
+    "stock": 8,
+    "rating": 5,
+    "sold": 1800,
+    "img": "https://images.unsplash.com/photo-1552346154-21d32810aba3?w=800&q=80&auto=format&fit=crop",
+    "desc": "Ikon abadi. Kulit premium hitam-putih, BNIB + extra laces."
+  },
+  {
+    "id": "p3",
+    "name": "Dunk Low \"Street White\"",
+    "cat": "Nike",
+    "price": 550000,
+    "old": 0,
+    "stock": 15,
+    "rating": 4.8,
+    "sold": 3100,
+    "img": "https://images.unsplash.com/photo-1549298916-b41d501d3772?w=800&q=80&auto=format&fit=crop",
+    "desc": "Clean, versatile, gampang di-mix."
+  },
+  {
+    "id": "p4",
+    "name": "Epilog Runner \"Volt Strike\"",
+    "cat": "Adidas",
+    "price": 550000,
+    "old": 0,
+    "stock": 20,
+    "rating": 4.7,
+    "sold": 1200,
+    "img": "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=800&q=80&auto=format&fit=crop",
+    "desc": "Runner ringan, cocok buat lari 5K maupun daily beater."
+  },
+  {
+    "id": "p5",
+    "name": "Classic Old Skool \"Concrete\"",
+    "cat": "Vans",
+    "price": 550000,
+    "old": 0,
+    "stock": 25,
+    "rating": 4.8,
+    "sold": 4200,
+    "img": "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=800&q=80&auto=format&fit=crop",
+    "desc": "Skate classic, kanvas durable + waffle sole."
+  },
+  {
+    "id": "p6",
+    "name": "NB 530 \"Silver Beige\"",
+    "cat": "New Balance",
+    "price": 550000,
+    "old": 0,
+    "stock": 10,
+    "rating": 4.9,
+    "sold": 2600,
+    "img": "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=800&q=80&auto=format&fit=crop",
+    "desc": "Retro runner paling hype, ABZORB cushioning empuk."
+  },
+  {
+    "id": "p7",
+    "name": "Epilog Court \"Lemon Haze\"",
+    "cat": "Limited",
+    "price": 550000,
+    "old": 0,
+    "stock": 6,
+    "rating": 4.9,
+    "sold": 800,
+    "img": "https://images.unsplash.com/photo-1560769629-975ec94e6a86?w=800&q=80&auto=format&fit=crop",
+    "desc": "Drop terbatas, cuma 200 pasang se-Indonesia."
+  },
+  {
+    "id": "p8",
+    "name": "Air Zoom \"Night Black\"",
+    "cat": "Nike",
+    "price": 550000,
+    "old": 0,
+    "stock": 9,
+    "rating": 4.7,
+    "sold": 950,
+    "img": "https://images.unsplash.com/photo-1512374382149-233c42b6a83b?w=800&q=80&auto=format&fit=crop",
+    "desc": "Full black stealth mode, water-repellent upper."
+  },
+  {
+    "id": "p9",
+    "name": "Superstar \"Vintage White\"",
+    "cat": "Adidas",
+    "price": 550000,
+    "old": 0,
+    "stock": 18,
+    "rating": 4.6,
+    "sold": 1500,
+    "img": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800&q=80&auto=format&fit=crop",
+    "desc": "Shell-toe legend sejak 1969."
+  },
+  {
+    "id": "p10",
+    "name": "Epilog Knit \"Cloud Grey\"",
+    "cat": "New Balance",
+    "price": 550000,
+    "old": 0,
+    "stock": 14,
+    "rating": 4.8,
+    "sold": 1100,
+    "img": "https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=800&q=80&auto=format&fit=crop",
+    "desc": "Knit ringan seperti kaos kaki."
+  },
+  {
+    "id": "p11",
+    "name": "RS-X \"Bubblegum\"",
+    "cat": "Puma",
+    "price": 550000,
+    "old": 0,
+    "stock": 11,
+    "rating": 4.5,
+    "sold": 700,
+    "img": "https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=800&q=80&auto=format&fit=crop",
+    "desc": "Chunky sneakers warna berani."
+  },
+  {
+    "id": "p12",
+    "name": "Blazer \"Retro High\"",
+    "cat": "Limited",
+    "price": 550000,
+    "old": 0,
+    "stock": 5,
+    "rating": 5,
+    "sold": 600,
+    "img": "https://images.unsplash.com/photo-1597045566677-8cf032ed6634?w=800&q=80&auto=format&fit=crop",
+    "desc": "High-cut retro basketball."
+  }
 ];
 const SIZES = [39,40,41,42,43,44,45];
 const CATS = ['Semua','Nike','Jordan','Adidas','New Balance','Vans','Puma','Limited'];
@@ -25,16 +889,22 @@ const WA_DISPLAY = '0831-3959-2869';
 // Tempel 2 baris ini SEKALI, upload folder ke hosting SEKALI, selesai.
 // Sehari-hari admin tinggal: Choose File → SIMPAN (tanpa coding, tampil semua pengunjung).
 // Kunci anon BOLEH publik (akses dibatasi RLS di SQL). Jangan taruh service_role key di sini!
-const SUPABASE_URL = ''; // contoh: 'https://xxxx.supabase.co'
-const SUPABASE_ANON_KEY = ''; // contoh: 'eyJhbGciOi...'
+// Semua konfigurasi ada di file terpisah `config.js` (1 tempat edit, aman dipublikasikan).
+const CFG = window.EPILOG_CONFIG || {};
+const SUPABASE_URL = (CFG.supabaseUrl || '').trim().replace(/\/$/, '');
+const SUPABASE_ANON_KEY = (CFG.supabaseAnonKey || '').trim();
+const ADMIN_EMAIL = (CFG.adminEmail || '').trim(); // email akun admin (bukan rahasia)
+const STORAGE_BUCKET = CFG.storageBucket || 'product-images';
 const CLOUD_CFG_KEY = 'epilog_cloud_cfg'; // override lokal (untuk tes tanpa edit code)
 // Config efektif = override lokal (tab ONLINE) kalau ada, kalau tidak pakai bawaan code.
 // Ini yang bikin PENGUNJUNG ikut baca data online tanpa perlu setting apa pun.
 function cloudCreds(){
   const local = load(CLOUD_CFG_KEY, {url:'', key:''});
-  const url = ((local && local.url) || SUPABASE_URL || '').trim().replace(/\/$/,'');
-  const key = ((local && local.key) || SUPABASE_ANON_KEY || '').trim();
-  return {url, key, fromLocal: !!(local && local.url && local.key)};
+  // config.js (dipakai di produksi) selalu menang.
+  // Override lokal hanya dipakai kalau config.js masih kosong (untuk tes).
+  const url = (SUPABASE_URL || (local && local.url) || '').trim().replace(/\/$/,'');
+  const key = (SUPABASE_ANON_KEY || (local && local.key) || '').trim();
+  return {url, key, fromLocal: !(SUPABASE_URL && SUPABASE_ANON_KEY) && !!(local && local.url && local.key)};
 }
 let cloudCfg = load(CLOUD_CFG_KEY, {url:'', key:''});
 let sb = null;
@@ -91,18 +961,35 @@ async function cloudDeleteProduct(id){
 // Upload blob gambar -> Storage public -> kembalikan URL publik
 async function cloudUploadImage(blob, filename){
   const c = getSb(); if(!c) throw new Error('Belum dikonfigurasi');
-  const path = filename || ('p-' + Date.now() + '.jpg');
-  const {error} = await c.storage.from('product-images').upload(path, blob, {contentType:'image/jpeg', upsert:true});
+  const path = filename || ('p-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,7) + '.jpg');
+  const {error} = await c.storage.from(STORAGE_BUCKET).upload(path, blob, {contentType:'image/jpeg', upsert:true});
   if(error) throw error;
-  const {data} = c.storage.from('product-images').getPublicUrl(path);
+  const {data} = c.storage.from(STORAGE_BUCKET).getPublicUrl(path);
   return data.publicUrl;
 }
+// Sudah terkonfigurasi online? (URL + kunci ada di config.js)
+function cloudConfigured(){ const c = cloudCreds(); return !!(c.url && c.key); }
+// Sesi admin (Supabase Auth) — persistent di browser, jadi tidak login ulang tiap buka.
+async function cloudUser(){
+  const c = getSb(); if(!c) return null;
+  try{ const {data} = await c.auth.getSession(); return (data && data.session && data.session.user) || null; }
+  catch{ return null; }
+}
+async function cloudSignIn(email, password){
+  const c = getSb(); if(!c) throw new Error('Belum dikonfigurasi');
+  const {data, error} = await c.auth.signInWithPassword({email: String(email||'').trim(), password: String(password||'')});
+  if(error) throw error;
+  return data && data.user;
+}
+async function cloudSignOut(){ const c = getSb(); if(c){ try{ await c.auth.signOut(); }catch{} } }
 async function initCloud(){
   refreshCloudStatus();
   const {url, key} = cloudCreds();
   if(!(url && key)) return; // masih lokal murni — pengunjung lihat cache/default, tidak error
   try{
     getSb();
+    // pulihkan sesi admin kalau masih tersimpan di browser ini
+    const u = await cloudUser();
     const remote = await cloudFetchProducts();
     if(remote.length){
       products = remote;
@@ -110,6 +997,7 @@ async function initCloud(){
       renderProducts(); renderAdmin();
     }
     cloudMode = true;
+    if(u) localStorage.setItem('epilog_admin','1');
   }catch(e){
     console.warn('cloud init gagal:', e);
     cloudMode = false;
@@ -146,11 +1034,21 @@ function disconnectCloud(){
 async function pushLocalToCloud(){
   try{
     if(!getSb()) return toast('Isi URL + Key dulu 🙏');
-    if(!products.length) return toast('Tidak ada produk lokal!');
-    toast('Mengupload ' + products.length + ' produk... ⏳');
-    for(const p of products) await cloudUpsertProduct(p);
+    const u = await cloudUser();
+    if(!u) return toast('Login dulu di panel admin (akun Supabase) sebelum upload 🙏');
+    let list = products;
+    if(!list || !list.length){
+      // kalau memory kosong, ambil katalog bawaan dari repo (products.json)
+      try{ list = await (await fetch('products.json', {cache:'no-store'})).json(); }catch{}
+    }
+    if(!list || !list.length) return toast('Tidak ada produk untuk diupload!');
+    toast('Mengupload ' + list.length + ' produk... ⏳');
+    let ok = 0;
+    for(const p of list){ try{ await cloudUpsertProduct(p); ok++; }catch(e){ console.warn('gagal:', p.id, e); } }
     cloudMode = true; refreshCloudStatus();
-    toast('Semua produk sudah online! ✅');
+    try{ const remote = await cloudFetchProducts(); if(remote.length){ products = remote; save('epilog_products', products); renderProducts(); renderAdmin(); } }catch{}
+    if(ok === list.length) toast('Semua produk sudah online! ✅');
+    else toast('Selesai: ' + ok + '/' + list.length + ' produk online ⚠️');
   }catch(e){ console.warn(e); toast('Gagal upload: ' + (e.message||e) + ' 🙏'); }
 }
 function copyCloudSql(){
@@ -378,6 +1276,20 @@ function applyVoucher(){
   renderCart();
 }
 function calcOngkir(){renderCart()}
+function toggleBankInfo(v){document.getElementById('bankInfo').style.display=(v==='Transfer Bank')?'block':'none'}
+function copyRek(el,rekan){
+  navigator.clipboard.writeText(rekan).then(()=>{
+    const before=el.textContent; el.textContent='✓ Tersalin!'; el.style.color='#22ff66';
+    setTimeout(()=>{el.textContent=before;el.style.color=''},1200);
+    toast('Nomor rekening ' + rekan + ' tersalin ke clipboard 📋');
+  });
+}
+function waKonfirmasiTransfer(){
+  const t=cartTotals();
+  const raw=`Halo EpilogKick! Saya sudah transfer pesanan. Total: ${rp(t.total)}. Mohon konfirmasi. Rekening: BCA 7361031095 atau Seabank 901285419193 (atas nama EPILOG KICK).`;
+  window.open(`https://wa.me/${WA_ADMIN}?text=${encodeURIComponent(raw)}`,'_blank');
+  toast('Membuka WhatsApp untuk konfirmasi transfer ✅');
+}
 
 // CHECKOUT
 function openCheckout(){
@@ -562,9 +1474,34 @@ function toggleAdmin(force){
   m.classList.toggle('show',show); bg.classList.toggle('show',show);
   if(show) renderAdmin();
 }
-function adminLogin(e){
+async function adminLogin(e){
   e.preventDefault();
-  if(document.getElementById('adminPass').value==='admin123'){
+  const pw = document.getElementById('adminPass').value || '';
+  const em = (document.getElementById('adminEmail')?.value || ADMIN_EMAIL || '').trim();
+  // 1) ONLINE (Supabase Auth) — dipakai di produksi (Netlify)
+  if(cloudConfigured()){
+    try{
+      const u = await cloudSignIn(em, pw);
+      if(!u) return toast('Login gagal 🙏');
+      localStorage.setItem('epilog_admin','1');
+      renderAdmin(); toast('Welcome, Admin! 👑');
+    }catch(err){ console.warn(err); toast((err && err.message) ? err.message : 'Login gagal 🙏'); }
+    return;
+  }
+  // 2) MODE SERVER (npm start / Render / VPS)
+  if(serverMode){
+    try{
+      const r = await fetch('api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})});
+      const j = await r.json().catch(()=>({}));
+      if(!r.ok) return toast(j.error || 'Password salah!');
+      localStorage.setItem('epilog_admin_token', j.token);
+      localStorage.setItem('epilog_admin','1');
+      renderAdmin(); toast('Welcome, Admin! 👑');
+    }catch{ toast('Server tidak merespon 🙏'); }
+    return;
+  }
+  // 3) MODE LOKAL (cuma di komputer ini)
+  if(pw === 'admin123'){
     localStorage.setItem('epilog_admin','1'); renderAdmin(); toast('Welcome, Admin! 👑');
   } else toast('Password salah!');
 }

@@ -175,7 +175,7 @@
     <div><a href="#" class="logo">EPILOG<span>KICK.</span></a><p>Toko sneakers original. Pesan mudah via WhatsApp.</p><p>📞 <a href="https://wa.me/6283139592869" target="_blank">0831-3959-2869 (WhatsApp)</a><br>✉️ halo@epilogkick.id</p></div>
     <div><b>SHOP</b><a href="#shop">Semua Sneakers</a><a href="#drop">Drop Terbaru</a><a href="#shop">Under 1 Juta</a><a href="#shop">Limited Edition</a></div>
     <div><b>BANTUAN</b><a href="#" onclick="openFaq(event)">Cara Tukar Size</a><a href="#" onclick="openFaq(event)">Lacak Pesanan</a><a href="#" onclick="openFaq(event)">Legit Check</a><a href="admin.html">Halaman Admin (Upload Online)</a></div>
-    <div><b>PEMBAYARAN</b><div class="pay">BCA • BRI • MANDIRI<br>QRIS • OVO • GOPAY • DANA<br>COD • CICILAN 0%</div></div>
+    <div><b>PEMBAYARAN</b><div class="pay">BCA: 7361031095 • Seabank: 901285419193 • BRI • MANDIRI<br>QRIS • OVO • GOPAY • DANA<br>COD • CICILAN 0%</div></div>
   </div>
   <div class="foot-bottom">© 2026 Epilog Kick. All rights reserved.</div>
 </footer>
@@ -238,8 +238,9 @@
       <label>Alamat Lengkap<textarea id="fAlamat" required placeholder="Jalan, No, Kecamatan, Kota, Kode Pos"></textarea></label>
       <div class="two">
         <label>Kota<select id="fKota" onchange="calcOngkir()"><option value="bandung">Bandung (Rp 15rb)</option><option value="jabodetabek">Jabodetabek (Rp 25rb)</option><option value="jawa">Luar Bandung / Jawa (Rp 35rb)</option><option value="luar">Luar Jawa (Rp 60rb)</option></select></label>
-        <label>Pembayaran<select id="fBayar"><option>Transfer Bank</option><option>QRIS</option><option>E-Wallet (OVO/Gopay/Dana)</option><option>COD</option><option>Cicilan 0% 12x</option></select></label>
+        <label>Pembayaran<select id="fBayar" onchange="toggleBankInfo(this.value)"><option>Transfer Bank</option><option>QRIS</option><option>E-Wallet (OVO/Gopay/Dana)</option><option>COD</option><option>Cicilan 0% 12x</option></select></label>
       </div>
+      <div id="bankInfo" class="bank-info" style="display:none"><div style="font-weight:800;margin-bottom:8px;color:#ccff00">🏦 INFO TRANSFER BANK</div><div class="bank-row"><b>BCA</b><span onclick="copyRek(this,'7361031095')" title="Klik untuk copy nomor rekening">7361031095</span></div><div class="bank-row"><b>Seabank</b><span onclick="copyRek(this,'901285419193')" title="Klik untuk copy nomor rekening">901285419193</span></div><div style="margin-top:8px;font-size:12px;color:#888">Atas nama: EPILOG KICK<br>Kirim bukti transfer via WhatsApp 0831-3959-2869 untuk konfirmasi</div><button class="btn btn-volt w-full" style="margin-top:10px" onclick="waKonfirmasiTransfer()">💬 Kirim Bukti Transfer via WhatsApp</button></div>
       <button class="btn btn-volt w-full" type="submit">BUAT PESANAN →</button>
     </form>
     <div class="co-sum"><h4>RINGKASAN</h4><div id="coItems"></div><div class="row total"><span>Total Bayar</span><b id="coTotal"></b></div></div>
@@ -252,8 +253,12 @@
   <button class="modal-x" onclick="toggleAdmin(false)">✕</button>
   <div id="adminLogin">
     <h2>ADMIN LOGIN</h2>
-    <p>Password default: <code>admin123</code></p>
-    <form onsubmit="adminLogin(event)" class="co-form"><input type="password" id="adminPass" placeholder="Password admin" required><button class="btn btn-black w-full" type="submit">MASUK</button></form>
+    <p>Login dengan akun admin (email + password) yang dibuat di <b>Supabase → Authentication → Users</b>.</p>
+    <form onsubmit="adminLogin(event)" class="co-form">
+      <input type="email" id="adminEmail" placeholder="Email admin" autocomplete="username">
+      <input type="password" id="adminPass" placeholder="Password admin" required autocomplete="current-password">
+      <button class="btn btn-black w-full" type="submit">MASUK</button>
+    </form>
   </div>
   <div id="adminPanel" style="display:none">
     <div class="admin-head"><h2>ADMIN PANEL <span id="cloudBadge" style="font-size:12px;vertical-align:middle"></span></h2><div><a class="btn btn-volt" href="admin.html" style="text-decoration:none">🌐 BUKA HALAMAN ADMIN (UPLOAD ONLINE)</a> <button class="btn btn-ghost" onclick="exportData()">⬇ Export</button> <button class="btn btn-ghost" onclick="resetData()">↺ Reset</button> <button class="btn btn-black" onclick="adminLogout()">Logout</button></div></div>
@@ -283,7 +288,7 @@
     <div id="tabOnline" style="display:none">
       <div style="background:#1a1a1a;border:1px solid #333;border-radius:14px;padding:16px;display:grid;gap:10px">
         <div style="font-weight:800">🌐 MODE ONLINE — upload tampil semua pengunjung <span id="cloudStatus2" style="font-weight:400;color:#888"></span></div>
-        <small style="color:#aaa;line-height:1.7"><b>Cara permanen (sekali saja):</b> 1) buat project gratis di <b>supabase.com</b> → 2) SQL Editor → RUN SQL di bawah → 3) tempel <b>URL + anon key</b> ke 2 baris paling atas <code>app.js</code> (<code>SUPABASE_URL</code> / <code>SUPABASE_ANON_KEY</code>) → upload folder ke hosting (Netlify/Vercel) sekali. Setelah itu tiap <b>Choose File → SIMPAN</b> otomatis online.<br><b>Coba-coba:</b> isi 2 kolom di bawah → SIMPAN &amp; AKTIFKAN (hanya berlaku di browser ini, pengunjung lain belum ikut sampai ditempel di code + deploy).</small>
+        <small style="color:#aaa;line-height:1.7"><b>Sudah terkonfigurasi?</b> Cek status di bawah. Kalau sudah <b>🌐 ONLINE</b>, katalog ini dibaca dari Supabase — semua pengunjung (termasuk dari HP) otomatis lihat update.<br><b>Setup sekali saja:</b> 1) <code>supabase-setup.sql</code> di repo → jalankan di <b>Supabase → SQL Editor → RUN</b> → 2) buat akun admin di <b>Authentication → Users → Add user</b> (centang Auto Confirm) → 3) isi <code>config.js</code> → 4) push ke GitHub → Netlify auto deploy.<br><b>Catatan:</b> URL + anon key di bawah sudah diisi otomatis dari <code>config.js</code>. Kolom ini cuma untukoverride di browser ini.</small>
         <label style="font-size:13px;font-weight:700;display:grid;gap:6px">Supabase URL<input id="cfgUrl" placeholder="https://xxxx.supabase.co" style="background:#1f1f1f;border:1px solid #333;color:#fff;padding:12px 14px;border-radius:12px;width:100%"></label>
         <label style="font-size:13px;font-weight:700;display:grid;gap:6px">Supabase Anon Key<input id="cfgKey" placeholder="eyJhbGciOi..." style="background:#1f1f1f;border:1px solid #333;color:#fff;padding:12px 14px;border-radius:12px;width:100%"></label>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -296,11 +301,14 @@
         <details style="font-size:13px;color:#aaa">
           <summary style="cursor:pointer;font-weight:800;color:#ccff00">📋 Cara setup sekali saja (klik untuk buka)</summary>
           <ol style="margin:10px 0 0 18px;line-height:1.8">
-            <li>Buka <b>supabase.com</b> → daftar gratis → <b>New project</b> (nama: epilogkick, region Singapore).</li>
-            <li><b>SQL Editor → New query</b> → copy SQL di bawah → <b>RUN</b> (bikin tabel + bucket foto + izin baca publik).</li>
-            <li><b>Project Settings → API</b> → copy <b>Project URL</b> + <b>anon public key</b> → tempel ke <code>app.js</code> baris <code>SUPABASE_URL</code>/<code>SUPABASE_ANON_KEY</code> → upload folder ke hosting → di Admin klik <b>⬆ UPLOAD SEMUA PRODUK LOKAL → ONLINE</b> sekali.</li>
+            <li>Buka <b>supabase.com</b> → project <b>epilogkick</b> → menu <b>SQL Editor → New query</b>.</li>
+            <li>Copy isi file <code>supabase-setup.sql</code> dari repo (bikin tabel + bucket foto + 73 produk) → <b>RUN</b>.</li>
+            <li><b>Authentication → Users → Add user</b> → isi email + password punyamu, centang <b>Auto Confirm User</b> → Save.</li>
+            <li>Salin email tadi ke <code>config.js</code> → <code>adminEmail</code>, lalu <code>git push</code>. Netlify auto deploy.</li>
+            <li>Buka <b>/admin.html</b> di situs live → login pakai email + password itu → ubah produk → langsung tampil di toko ✅</li>
           </ol>
-          <pre id="cloudSql" style="white-space:pre-wrap;background:#0a0a0a;border:1px solid #333;border-radius:10px;padding:12px;margin-top:10px;font-size:11px;color:#ddd">create table if not exists products (
+          <pre id="cloudSql" style="white-space:pre-wrap;background:#0a0a0a;border:1px solid #333;border-radius:10px;padding:12px;margin-top:10px;font-size:11px;color:#ddd">-- Versi ringkas. Versi lengkap (+ 73 produk) ada di file supabase-setup.sql
+create table if not exists public.products (
   id text primary key,
   name text not null,
   price integer default 0,
@@ -312,23 +320,23 @@
   rating numeric default 4.8,
   sold integer default 0
 );
-alter table products enable row level security;
-drop policy if exists "public read" on products;
-create policy "public read" on products for select using (true);
-drop policy if exists "public write" on products;
-create policy "public write" on products for all using (true) with check (true);
+alter table public.products enable row level security;
+drop policy if exists "public read products" on public.products;
+create policy "public read products" on public.products for select to anon, authenticated using (true);
+drop policy if exists "admin write products" on public.products;
+create policy "admin write products" on public.products for all to authenticated using (true) with check (true);
 
 insert into storage.buckets (id, name, public)
 values ('product-images','product-images', true)
 on conflict (id) do update set public = true;
 drop policy if exists "public read images" on storage.objects;
-create policy "public read images" on storage.objects for select using (bucket_id='product-images');
-drop policy if exists "public upload images" on storage.objects;
-create policy "public upload images" on storage.objects for insert with check (bucket_id='product-images');
-drop policy if exists "public update images" on storage.objects;
-create policy "public update images" on storage.objects for update using (bucket_id='product-images');
-drop policy if exists "public delete images" on storage.objects;
-create policy "public delete images" on storage.objects for delete using (bucket_id='product-images');</pre>
+create policy "public read images" on storage.objects for select to anon, authenticated using (bucket_id='product-images');
+drop policy if exists "admin upload images" on storage.objects;
+create policy "admin upload images" on storage.objects for insert to authenticated with check (bucket_id='product-images');
+drop policy if exists "admin update images" on storage.objects;
+create policy "admin update images" on storage.objects for update to authenticated using (bucket_id='product-images') with check (bucket_id='product-images');
+drop policy if exists "admin delete images" on storage.objects;
+create policy "admin delete images" on storage.objects for delete to authenticated using (bucket_id='product-images');</pre>
           <button class="btn btn-ghost" onclick="copyCloudSql()">📋 COPY SQL</button>
         </details>
       </div>
@@ -339,6 +347,7 @@ create policy "public delete images" on storage.objects for delete using (bucket
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
